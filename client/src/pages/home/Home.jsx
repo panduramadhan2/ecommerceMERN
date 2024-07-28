@@ -1,35 +1,28 @@
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import LoginIcon from "@mui/icons-material/Login";
+import { Box } from "@mui/material";
+import Appbar from "../../components/appbar/Appbar";
+import Footer from "../../components/footer/Footer";
+import Products from "../product/Products";
 
-import { IconButton } from "@mui/material";
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-// import IconButton from "@mui/material";
-
-function Home() {
+const Home = () => {
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-          <img
-            src="logo2.png"
-            alt="logo"
-            style={{ height: "50px", width: "120px", objectFit: "contain" }}
-          />
-
-          <Box sx={{ display: "flex", gap: 1 }}>
-            <IconButton color="inherit">
-              <ShoppingCartOutlinedIcon />
-            </IconButton>
-            <IconButton color="inherit">
-              <LoginIcon />
-            </IconButton>
-          </Box>
-        </Toolbar>
-      </AppBar>
-    </Box>
+    <div>
+      <Appbar />
+      <Box
+        sx={{
+          minHeight: 700,
+          m: 2,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexWrap: "wrap",
+          gap: 1,
+        }}
+      >
+        <Products />
+      </Box>
+      <Footer />
+    </div>
   );
-}
+};
 
 export default Home;
