@@ -11,9 +11,12 @@ import { useNavigate } from "react-router-dom";
 
 const Appbar = () => {
   const navigate = useNavigate();
-  const user = "";
+  const user = "user";
 
-  const userMenu = ["Profile", "Orders", "Logout"];
+  const userMenu = [
+    { menu: "Profile", link: "/profile" },
+    { menu: "Order", link: "/order" },
+  ];
   const adminMenu = ["Setting", "Dashboard", "Logout"];
 
   const [open, setOpen] = useState(null);
@@ -26,15 +29,23 @@ const Appbar = () => {
     setOpen(null);
   };
   const toCart = () => navigate("/cart");
+  const toHome = () => navigate("/");
+  const toPage = (link) => {
+    navigate(link);
+    menuClose();
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-          <img
-            src="logo2.png"
-            alt="logo"
-            style={{ height: "50px", width: "120px", objectFit: "contain" }}
-          />
+          <Box sx={{ cursor: "pointer" }} onClick={toHome}>
+            <img
+              src="logo2.png"
+              alt="logo"
+              style={{ height: "50px", width: "120px", objectFit: "contain" }}
+            />
+          </Box>
 
           <Box sx={{ display: "flex", gap: 1 }}>
             <IconButton color="inherit" onClick={toCart}>
@@ -60,11 +71,12 @@ const Appbar = () => {
                   open={Boolean(open)}
                   onClose={menuClose}
                 >
-                  {userMenu.map((item) => (
-                    <MenuItem onClick={menuClose} key={item}>
-                      {item}
+                  {userMenu.map((item, index) => (
+                    <MenuItem key={index} onClick={() => toPage(item.link)}>
+                      {item.menu}
                     </MenuItem>
                   ))}
+                  <MenuItem>Logout</MenuItem>
                 </Menu>
               </>
             ) : user === "admin" ? (
