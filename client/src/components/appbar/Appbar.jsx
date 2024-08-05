@@ -7,8 +7,10 @@ import Toolbar from "@mui/material/Toolbar";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Appbar = () => {
+  const navigate = useNavigate();
   const user = "";
 
   const userMenu = ["Profile", "Orders", "Logout"];
@@ -23,6 +25,7 @@ const Appbar = () => {
   const menuClose = (event) => {
     setOpen(null);
   };
+  const toCart = () => navigate("/cart");
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -34,7 +37,7 @@ const Appbar = () => {
           />
 
           <Box sx={{ display: "flex", gap: 1 }}>
-            <IconButton color="inherit">
+            <IconButton color="inherit" onClick={toCart}>
               <ShoppingCartOutlinedIcon />
             </IconButton>
             {user === "user" ? (
