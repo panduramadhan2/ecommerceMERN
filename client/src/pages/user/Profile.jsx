@@ -9,7 +9,7 @@ const Profile = () => {
       <Box
         sx={{
           // height: "calc(100vh - 70px)",
-          height: "100vh",
+          height: "100Vh",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",

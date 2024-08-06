@@ -11,13 +11,16 @@ import { useNavigate } from "react-router-dom";
 
 const Appbar = () => {
   const navigate = useNavigate();
-  const user = "user";
+  const user = "admin";
 
   const userMenu = [
     { menu: "Profile", link: "/profile" },
     { menu: "Order", link: "/order" },
   ];
-  const adminMenu = ["Setting", "Dashboard", "Logout"];
+  const adminMenu = [
+    { menu: "Setting", link: "/admin-setting" },
+    { menu: "Dashboard", link: "/admin-dashboard" },
+  ];
 
   const [open, setOpen] = useState(null);
 
@@ -99,11 +102,12 @@ const Appbar = () => {
                   open={Boolean(open)}
                   onClose={menuClose}
                 >
-                  {adminMenu.map((item) => (
-                    <MenuItem onClick={menuClose} key={item}>
-                      {item}
+                  {adminMenu.map((item, index) => (
+                    <MenuItem key={index} onClick={() => toPage(item.link)}>
+                      {item.menu}
                     </MenuItem>
                   ))}
+                  <MenuItem>Logout</MenuItem>
                 </Menu>
               </>
             ) : (
