@@ -9,6 +9,7 @@ import Dashboard from "./pages/admin/dashboard/Dashboard";
 import UsersPage from "./pages/admin/users/UsersPage";
 import ProductsPage from "./pages/admin/products/ProductsPage";
 import OrdersPage from "./pages/admin/orders/OrdersPage";
+import ReportPage from "./pages/admin/report/ReportPage";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/admin-pelanggan" element={<UsersPage />} />
         <Route path="/admin-produk" element={<ProductsPage />} />
         <Route path="/admin-pesanan" element={<OrdersPage />} />
+        <Route path="/admin-laporan" element={<ReportPage />} />
       </Routes>
     </BrowserRouter>
   );
