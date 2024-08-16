@@ -5,7 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { forwardRef, useEffect, useState } from "react";
 import ReportTable from "./ReportTable";
 
-const DateButton = forwardRef(({ value, onClick, className }, ref) => (
+const DateButton = forwardRef(({ value, onClick }, ref) => (
   <Button variant="contained" color="primary" onClick={onClick} ref={ref}>
     {value}
   </Button>

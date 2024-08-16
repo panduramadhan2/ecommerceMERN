@@ -8,13 +8,10 @@ import Orders from "./pages/user/order/Orders";
 import Dashboard from "./pages/admin/dashboard/Dashboard";
 import UsersPage from "./pages/admin/users/UsersPage";
 import ProductsPage from "./pages/admin/products/ProductsPage";
-<<<<<<< HEAD
 import OrdersPage from "./pages/admin/orders/OrdersPage";
-import ReportPage from "./pages/admin/report/ReportPage";
-=======
 import LoginPage from "./components/login/LoginPage";
 import Signup from "./components/signup/Signup";
->>>>>>> 7c99a1e (checkpoint Login 19 dan Resgtrasi 20)
+import ReportPage from "./pages/admin/report/ReportPage";
 
 function App() {
   return (
