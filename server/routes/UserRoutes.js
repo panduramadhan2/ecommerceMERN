@@ -2,6 +2,7 @@ import express from "express";
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 import passport from "passport";
+import { authenticate } from "../middleware/authenticate.js";
 
 const router = express.Router();
 
@@ -55,6 +56,62 @@ router.post("/login", async (req, res) => {
     })(req, res);
   } catch (error) {
     return res.status(500).json({ error: error });
+  }
+});
+
+//Profile
+router.get("/profile", authenticate(["admin", "user"]), async (req, res) => {
+  try {
+    const user = req.user;
+    res.status(200).json(user);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+//Update profile
+router.put(
+  "/update-profile",
+  authenticate(["admin", "user"]),
+  async (req, res) => {
+    try {
+      const id = req.user._id;
+      const user = await User.findByIdAndUpdate(id, req.body, {
+        new: true,
+        runValidators: true,
+      });
+      res.status(200).json({ message: "Berhasil diperbarui", user });
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  }
+);
+
+// Menampilkan seluruh user
+router.get("/get", authenticate(["admin"]), async (req, res) => {
+  try {
+    const data = await User.find();
+    const users = data.filter((user) => user.role === "user");
+    res.status(200).json(users);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+//Menghapus user
+router.delete("/delete/:id", authenticate(["admin"]), async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ error: "User tidak ditemukan" });
+    }
+
+    await user.deleteOne();
+    res.status(200).json({ message: "User berhasil dihapus" });
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({ error: error.message });
   }
 });
 export default router;
