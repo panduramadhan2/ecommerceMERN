@@ -26,7 +26,7 @@ router.post("/register", async (req, res) => {
           return res.status(500).json({ error: err.message });
         } else {
           const token = generateToken(user);
-          res.status(200).cookie("token", token).json({ token });
+          res.status(200).cookie("token", token).json({ isRegister: true });
         }
       }
     );
@@ -49,7 +49,7 @@ router.post("/login", async (req, res) => {
             return res.status(500).json({ error: err.message });
           }
           const token = generateToken(user);
-          res.status(200).json({ token });
+          res.status(200).cookie("token", token).json({ isLogin: true });
         });
       }
     })(req, res);
