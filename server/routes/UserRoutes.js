@@ -50,7 +50,7 @@ router.post("/login", async (req, res) => {
             return res.status(500).json({ error: err.message });
           }
           const token = generateToken(user);
-          res.status(200).cookie("token", token).json({ isLogin: true });
+          res.status(200).cookie("token", token).json({ isLogin: true, user });
         });
       }
     })(req, res);
