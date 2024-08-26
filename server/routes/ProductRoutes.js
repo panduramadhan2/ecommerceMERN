@@ -40,10 +40,24 @@ router.get("/:name", async (req, res, next) => {
     const product = await Product.findOne({ name: req.params.name });
 
     if (!product) {
-      return res.status(404).json({ error: "Barang tidak ditemukan" });
+      return res.status(404).json({ error: "Produk tidak ditemukan" });
     }
     res.status(200).json(product);
   } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+router.delete("/delete/:id", async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+
+    await product.deleteOne();
+    res.status(200).json({ message: "produk berhasil dihapus" });
+  } catch (error) {
+    if (error.name === "CastError") {
+      return res.status(404).json({ error: "Produk tidak ditemukan" });
+    }
     return res.status(500).json({ error: error.message });
   }
 });
