@@ -9,6 +9,7 @@ import User from "./models/User.js";
 import userRoutes from "./routes/UserRoutes.js";
 import productRoutes from "./routes/ProductRoutes.js";
 import cartRoutes from "./routes/CartRoutes.js";
+import shippingRoutes from "./routes/ShippingRoutes.js";
 
 const app = express();
 app.use(cors());
@@ -41,5 +42,6 @@ passport.deserializeUser(User.deserializeUser());
 app.use("/user", userRoutes);
 app.use("/products", productRoutes);
 app.use("/cart", cartRoutes);
+app.use("/shipping", shippingRoutes);
 
 export default app;
