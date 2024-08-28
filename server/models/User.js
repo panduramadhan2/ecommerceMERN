@@ -1,6 +1,7 @@
 import { model, Schema } from "mongoose";
 import passportLocalMongoose from "passport-local-mongoose";
 import findOrCreate from "mongoose-findorcreate";
+import crypto from "crypto";
 
 const userSchema = new Schema(
   {
@@ -21,5 +22,15 @@ const userSchema = new Schema(
 
 userSchema.plugin(passportLocalMongoose);
 userSchema.plugin(findOrCreate);
+
+userSchema.methods.PasswordToken = function () {
+  const token = crypto.randomBytes(20).toString("hex");
+  this.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(token)
+    .digest("hex");
+  this.resetPasswordExpires = Date.now() + 18000000;
+  return token;
+};
 
 export default model("user", userSchema);
