@@ -11,6 +11,7 @@ import productRoutes from "./routes/ProductRoutes.js";
 import cartRoutes from "./routes/CartRoutes.js";
 import shippingRoutes from "./routes/ShippingRoutes.js";
 import paymentRoutes from "./routes/PaymentRoutes.js";
+import orderRoutes from "./routes/OrderRoutes.js";
 
 const app = express();
 app.use(cors());
@@ -45,5 +46,6 @@ app.use("/products", productRoutes);
 app.use("/cart", cartRoutes);
 app.use("/shipping", shippingRoutes);
 app.use("/payment", paymentRoutes);
+app.use("/order", orderRoutes);
 
 export default app;
