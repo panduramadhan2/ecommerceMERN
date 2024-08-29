@@ -30,8 +30,19 @@ export const loadUser = createAsyncThunk(
   async (_, thunkApi) => {
     try {
       const { data } = await axios.get("/auth/profile", config);
-      //   const { data } = await axios.get("/auth/profile", _, config);
-      return data.user;
+      return data;
+    } catch (error) {
+      return thunkApi.rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
+export const logoutUser = createAsyncThunk(
+  "/user/logout",
+  async (_, thunkApi) => {
+    try {
+      const { data } = await axios.post("/user/logout", config);
+      return data.message;
     } catch (error) {
       return thunkApi.rejectWithValue(error.response.data.message);
     }

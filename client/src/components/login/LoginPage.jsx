@@ -1,13 +1,15 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import GoogleIcon from "@mui/icons-material/Google";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../state/api/authApi";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const { isAuth, authLoading } = useSelector((state) => state.auth);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,6 +23,13 @@ const LoginPage = () => {
     };
     dispatch(loginUser(data));
   };
+
+  useEffect(() => {
+    if (isAuth) {
+      navigate("/");
+      localStorage.setItem("login", JSON.stringify("login"));
+    }
+  }, [isAuth]);
   return (
     <Box
       sx={{

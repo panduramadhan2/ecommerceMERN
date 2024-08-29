@@ -139,4 +139,13 @@ router.post("/send-email", async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 });
+
+router.post("/logout", (req, res) => {
+  try {
+    res.cookie("token", null, { expiresIn: new Date(Date.now()) });
+    res.status(200).json({ message: "Berhasil logout" });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
 export default router;

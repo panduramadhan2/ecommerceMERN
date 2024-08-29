@@ -1,4 +1,5 @@
 import "./App.css";
+import "izitoast/dist/css/iziToast.min.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/home/Home";
 import DetailProduct from "./pages/product/DetailProduct";
@@ -12,8 +13,18 @@ import OrdersPage from "./pages/admin/orders/OrdersPage";
 import LoginPage from "./components/login/LoginPage";
 import Signup from "./components/signup/Signup";
 import ReportPage from "./pages/admin/report/ReportPage";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { loadUser } from "./state/api/authApi";
 
 function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const load = localStorage.getItem("login");
+    if (load) {
+      dispatch(loadUser);
+    }
+  }, [dispatch]);
   return (
     <BrowserRouter>
       <Routes>
