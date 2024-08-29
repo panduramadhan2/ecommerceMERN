@@ -2,15 +2,24 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import GoogleIcon from "@mui/icons-material/Google";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../../state/api/authApi";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const toSignUp = () => navigate("/daftar");
 
-  const handleLogin = () => {
-    alert(`${email} dan ${password}`);
+  const handleLogin = (e) => {
+    e.preventDefault();
+    const data = {
+      username: email,
+      password: password,
+    };
+    dispatch(loginUser(data));
   };
   return (
     <Box
