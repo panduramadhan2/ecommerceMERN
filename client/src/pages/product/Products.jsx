@@ -12,15 +12,18 @@ import {
   Pagination,
   Select,
 } from "@mui/material";
-import products from "../../data/Products";
+
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import { orange } from "@mui/material/colors";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useGetProductsQuery } from "../../state/api/productApi";
 
 const Products = () => {
   const navigate = useNavigate();
+  const { data, eror, isLoading } = useGetProductsQuery();
   const [searchTerm, setSeacrhTerm] = useState("");
+
   const [categoryTerm, setCategoryTerm] = useState("");
   const searchFunction = (e) => {
     const { name, value } = e.target;
@@ -45,10 +48,11 @@ const Products = () => {
     return name && category;
   };
 
-  const filteredProduct = products.filter(filterd);
+  const filteredProduct = data?.filter(filterd);
+  // console.log("error bangsat", data);
 
   const categories = [
-    ...new Set(filteredProduct.map((product) => product.category)),
+    ...new Set(filteredProduct?.map((product) => product.category)),
   ];
   const productPerPage = 30;
   const [currentPage, setCurrentPage] = useState(1);
@@ -56,8 +60,8 @@ const Products = () => {
   const startIndex = (currentPage - 1) * productPerPage;
   const endIndex = startIndex + productPerPage;
 
-  const paginatedProducts = filteredProduct.slice(startIndex, endIndex);
-  const pageCount = Math.ceil(filteredProduct.length / productPerPage);
+  const paginatedProducts = filteredProduct?.slice(startIndex, endIndex);
+  const pageCount = Math.ceil(filteredProduct?.length / productPerPage);
 
   const pageChanging = (event, page) => {
     setCurrentPage(page);
@@ -107,7 +111,7 @@ const Products = () => {
           mt: 2,
         }}
       >
-        {paginatedProducts.map((product) => (
+        {paginatedProducts?.map((product) => (
           <Card
             key={product.name}
             sx={{
