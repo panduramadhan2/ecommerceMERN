@@ -2,14 +2,60 @@ import { Box, Button, IconButton, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import SelectOptions from "./SelectOptions";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  useGetCitiesQuery,
+  useGetProvincesQuery,
+  useGetServicesQuery,
+} from "../../state/api/shipmentApi";
 
-const Order = () => {
+const Order = ({ product }) => {
+  const [qty, setQty] = useState(1);
+  const [subtotal, setSubtotal] = useState(0);
   const [province, setProvince] = useState("");
   const [city, setCity] = useState("");
   const [courier, setCourier] = useState("");
   const [service, setService] = useState("");
   const [address, setAddress] = useState("");
+
+  const origin = "78";
+
+  const { data: provinces } = useGetProvincesQuery();
+  const { data: cities } = useGetCitiesQuery(province, { skip: !province });
+  const { data: servicesData } = useGetServicesQuery(
+    {
+      origin,
+      destination: city,
+      weight: product?.weight,
+      courier,
+    },
+    { skip: !city || !courier }
+  );
+
+  const services = servicesData && servicesData[0]?.costs;
+  // const services = servicesData[0]?.costs;
+
+  const total = subtotal + service;
+
+  const increaseQty = () => {
+    if (qty < product?.stock) {
+      setQty(qty + 1);
+      setSubtotal(product?.price * (qty + 1));
+    }
+  };
+
+  const decreaseQty = () => {
+    if (qty > 1) {
+      setQty(qty - 1);
+      setSubtotal(product?.price * (qty - 1));
+    }
+  };
+
+  useEffect(() => {
+    if (product) {
+      setSubtotal(product?.price);
+    }
+  }, [product]);
 
   return (
     <Box
@@ -35,7 +81,7 @@ const Order = () => {
             padding: "2px",
           }}
         >
-          <IconButton>
+          <IconButton onClick={() => decreaseQty()}>
             <RemoveIcon />
           </IconButton>
           <Box
@@ -46,9 +92,9 @@ const Order = () => {
               justifyContent: "center",
             }}
           >
-            1
+            {qty}
           </Box>
-          <IconButton>
+          <IconButton onClick={() => increaseQty()}>
             <AddIcon />
           </IconButton>
         </Box>
@@ -59,7 +105,7 @@ const Order = () => {
             justifyContent: "center",
           }}
         >
-          Total Stok: 30
+          Total Stok: {product?.stock}
         </Box>
       </Box>
       <Box
@@ -73,7 +119,7 @@ const Order = () => {
           Subtotal
         </Typography>
         <Typography fontWeight="bold" fontSize={20}>
-          Rp 3.000.000
+          {`Rp ${parseFloat(subtotal).toLocaleString("id-ID")}`}
         </Typography>
       </Box>
       <Typography fontWeight="bold">Alamat Pengiriman</Typography>
@@ -84,6 +130,9 @@ const Order = () => {
           kurir={(c) => setCourier(c)}
           layanan={(s) => setService(s)}
           alamat={(a) => setAddress(a)}
+          provinces={provinces}
+          cities={cities}
+          services={services}
         />
       </Box>
       <Box
@@ -97,7 +146,7 @@ const Order = () => {
           Ongkir
         </Typography>
         <Typography fontWeight="bold" fontSize={20}>
-          Rp 3.000.000
+          Rp {parseFloat(service).toLocaleString("id-ID")}
         </Typography>
       </Box>
       <Box
@@ -111,7 +160,7 @@ const Order = () => {
           Total
         </Typography>
         <Typography fontWeight="bold" fontSize={20}>
-          Rp 3.000.000
+          Rp {parseFloat(total).toLocaleString("id-ID")}
         </Typography>
       </Box>
       <Button variant="contained">Keranjang</Button>

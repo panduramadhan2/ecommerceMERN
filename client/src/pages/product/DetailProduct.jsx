@@ -108,7 +108,7 @@ const DetailProduct = () => {
           </Box>
         </Box>
         <Box sx={{ display: "flex", flex: 1, p: 2, justifyContent: "center" }}>
-          <Order />
+          <Order product={data} />
         </Box>
       </Box>
       <Footer />

@@ -22,13 +22,13 @@ import { useGetProductsQuery } from "../../state/api/productApi";
 const Products = () => {
   const navigate = useNavigate();
   const { data, eror, isLoading } = useGetProductsQuery();
-  const [searchTerm, setSeacrhTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [categoryTerm, setCategoryTerm] = useState("");
   const searchFunction = (e) => {
     const { name, value } = e.target;
     if (name === "search") {
-      setSeacrhTerm(value);
+      setSearchTerm(value);
     } else if (name === "category") {
       if (value === "all") {
         setCategoryTerm("");
