@@ -22,7 +22,7 @@ function App() {
   useEffect(() => {
     const load = localStorage.getItem("login");
     if (load) {
-      dispatch(loadUser);
+      dispatch(loadUser());
     }
   }, [dispatch]);
   return (

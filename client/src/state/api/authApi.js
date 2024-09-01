@@ -26,10 +26,10 @@ export const loginUser = createAsyncThunk(
 );
 
 export const loadUser = createAsyncThunk(
-  "auth/loadUser",
+  "user/loadUser",
   async (_, thunkApi) => {
     try {
-      const { data } = await axios.get("/auth/profile", config);
+      const { data } = await axios.get("/user/profile", config);
       return data;
     } catch (error) {
       return thunkApi.rejectWithValue(error.response.data.message);

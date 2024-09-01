@@ -10,6 +10,7 @@ const LoginPage = () => {
   const dispatch = useDispatch();
 
   const { isAuth, authLoading } = useSelector((state) => state.auth);
+  // const { user } = useSelector((state) => state.auth);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

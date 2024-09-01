@@ -35,7 +35,7 @@ const SelectOptions = ({
   };
 
   useEffect(() => {
-    console.log(address);
+    // console.log(address);
     alamat(address);
   }, [address]);
 
