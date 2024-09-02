@@ -11,10 +11,12 @@ import {
 import { useSelector } from "react-redux";
 import iziToast from "izitoast";
 import { useGetTokenMutation } from "../../state/api/paymentApi";
+import { useCreateOrderMutation } from "../../state/api/orderApi";
 
 const Order = ({ product }) => {
   const { isAuth, user } = useSelector((state) => state.auth);
-  const [getToken, { isLoading, data, status }] = useGetTokenMutation();
+  const [getToken, { isLoading, data }] = useGetTokenMutation();
+  const [createOrder, { isSuccess, reset }] = useCreateOrderMutation();
 
   const [qty, setQty] = useState(1);
   const [subtotal, setSubtotal] = useState(0);
@@ -42,6 +44,9 @@ const Order = ({ product }) => {
   // const services = servicesData[0]?.costs;
 
   const total = subtotal + service;
+
+  const id = Date.now();
+  const token = data?.token;
 
   const increaseQty = () => {
     if (qty < product?.stock) {
@@ -99,7 +104,7 @@ const Order = ({ product }) => {
       });
     }
     const data = {
-      orderId: Date.now(),
+      orderId: id,
       amount: total,
       name: user?.name,
       email: user?.username,
@@ -109,12 +114,69 @@ const Order = ({ product }) => {
   };
 
   useEffect(() => {
-    if (status === "fulfilled") {
-      window.snap.pay(data?.token, {
-        onSuccess: (result) => {},
+    if (token) {
+      window.snap.pay(token, {
+        onSuccess: (result) => {
+          const data = {
+            orderId: id,
+            user: user?._id,
+            address: address,
+            phone: user?.phone,
+            subtotal: subtotal,
+            payment: total,
+            paymentStatus: result.transaction_status,
+            shippingCost: service,
+            products: [
+              {
+                productId: product?._id,
+                qty: qty,
+                totalPrice: subtotal,
+                profit: product?.price * qty,
+              },
+            ],
+          };
+          createOrder(data);
+        },
+        onPending: (result) => {
+          const data = {
+            orderId: id,
+            user: user?._id,
+            address: address,
+            phone: user?.phone,
+            subtotal: subtotal,
+            payment: total,
+            paymentStatus: result.transaction_status,
+            shippingCost: service,
+            products: [
+              {
+                productId: product?._id,
+                qty: qty,
+                totalPrice: subtotal,
+                profit: product?.profit * qty,
+              },
+            ],
+          };
+          console.log(data);
+        },
+        onError: (error) => {
+          iziToast.error({
+            title: "Error",
+            message: error,
+            position: "topRight",
+            timeout: 3000,
+          });
+        },
+        onClose: () => {
+          iziToast.info({
+            title: "Info",
+            message: "Segera lakukan pembayaran",
+            position: "topRight",
+            timeout: 3000,
+          });
+        },
       });
     }
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     // You can also change below url value to any script url you wish to load,
@@ -138,6 +200,12 @@ const Order = ({ product }) => {
 
   // Then somewhere else on your React component, `window.snap` global object will be available to use
   // e.g. you can then call `window.snap.pay( ... )` function.
+
+  useEffect(() => {
+    if (isSuccess) {
+      reset();
+    }
+  }, [isSuccess, reset]);
 
   return (
     <Box

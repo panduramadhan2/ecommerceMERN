@@ -25,7 +25,7 @@ router.post(
           phone: req.body.phone,
         },
         callbacks: {
-          finish: `${process.env.DOMAIN}`,
+          finish: `${process.env.DOMAIN}/confirmation`,
         },
         enabled_payment: [
           "mandiri_clicpay",
