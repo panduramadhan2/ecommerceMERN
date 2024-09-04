@@ -118,7 +118,7 @@ const Order = ({ product }) => {
       window.snap.pay(token, {
         onSuccess: (result) => {
           const data = {
-            orderId: id,
+            orderId: result.order_id,
             user: user?._id,
             address: address,
             phone: user?.phone,
@@ -139,7 +139,8 @@ const Order = ({ product }) => {
         },
         onPending: (result) => {
           const data = {
-            orderId: id,
+            // orderId: id,
+            orderId: result.order_id,
             user: user?._id,
             address: address,
             phone: user?.phone,
@@ -156,7 +157,18 @@ const Order = ({ product }) => {
               },
             ],
           };
-          console.log(data);
+          // console.log(data);
+          createOrder(data);
+
+          // window.location.href = "/confirmation";
+          setTimeout(() => {
+            window.location.href = "/confirmation";
+
+            // Setelah 5 detik lagi, kembali ke halaman home
+            setTimeout(() => {
+              window.location.href = "/";
+            }, 5000); // 5 detik untuk kembali ke home
+          }, 5000);
         },
         onError: (error) => {
           iziToast.error({

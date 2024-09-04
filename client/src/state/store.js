@@ -3,6 +3,7 @@ import authSlice from "./slice/authSlice";
 import { productApi } from "./api/productApi";
 import { shipmentApi } from "./api/shipmentApi";
 import { paymentApi } from "./api/paymentApi";
+import { orderApi } from "./api/orderApi";
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     [productApi.reducerPath]: productApi.reducer,
     [shipmentApi.reducerPath]: shipmentApi.reducer,
     [paymentApi.reducerPath]: paymentApi.reducer,
+    [orderApi.reducerPath]: orderApi.reducer,
   },
 
   middleware: (getDefaultMiddleware) =>
@@ -17,6 +19,7 @@ const store = configureStore({
       productApi.middleware,
       shipmentApi.middleware,
       paymentApi.middleware,
+      orderApi.middleware,
     ]),
 });
 

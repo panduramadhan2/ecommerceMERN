@@ -10,6 +10,7 @@ const orderSchema = new Schema(
     payment: { type: Number, required: true },
     shippingCost: { type: Number, required: true },
     paymentStatus: { type: String, default: "pending" },
+    // paymentStatus: { type: String },
     orderStatus: { type: String, default: "processing" },
     resi: { type: String },
     products: [

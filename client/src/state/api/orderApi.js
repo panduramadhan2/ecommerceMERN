@@ -14,7 +14,11 @@ export const orderApi = createApi({
         body,
       }),
     }),
+    getMyOrder: builder.mutation({
+      query: () => "/my-order",
+      method: "GET",
+    }),
   }),
 });
 
-export const { useCreateOrderMutation } = orderApi;
+export const { useCreateOrderMutation, useGetMyOrderMutation } = orderApi;

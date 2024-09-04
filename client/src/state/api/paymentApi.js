@@ -14,7 +14,11 @@ export const paymentApi = createApi({
         body,
       }),
     }),
+    updateStatus: builder.mutation({
+      query: (id) => `/status/${id}`,
+      method: "GET",
+    }),
   }),
 });
 
-export const { useGetTokenMutation } = paymentApi;
+export const { useGetTokenMutation, useUpdateStatusMutation } = paymentApi;
