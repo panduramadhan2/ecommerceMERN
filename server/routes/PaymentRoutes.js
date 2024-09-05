@@ -1,6 +1,7 @@
 import express, { response } from "express";
 import midtransClient from "midtrans-client";
 import { authenticate } from "../middleware/authenticate.js";
+import Order from "../models/Order.js";
 
 const router = express.Router();
 
@@ -84,6 +85,37 @@ router.post(
 //   }
 // );
 
+// router.get(
+//   "/status/:orderId",
+//   authenticate(["admin", "user"]),
+//   async (req, res) => {
+//     try {
+//       const snap = new midtransClient.Snap({
+//         isProduction: false,
+//         serverKey: process.env.SERVER_KEY,
+//         clientKey: process.env.CLIENT_KEY,
+//       });
+
+//       //   const orderId = req.params.orderId;
+
+//       // Format or validate orderId if needed
+
+//       const response = await snap.transaction
+//         .status(req.params.orderId)
+//         .then((response) => response); // Return response object
+
+//       return res.status(200).json(response); // Return response to client
+//     } catch (error) {
+//       if (error.statusCode === 404) {
+//         // Example: Specific error handling
+//         return res.status(404).json({ error: "Order not found" });
+//       } else {
+//         // Handle other error codes or general errors
+//         return res.status(500).json({ error: error.message });
+//       }
+//     }
+//   }
+// );
 router.get(
   "/status/:orderId",
   authenticate(["admin", "user"]),
@@ -95,23 +127,32 @@ router.get(
         clientKey: process.env.CLIENT_KEY,
       });
 
-      //   const orderId = req.params.orderId;
-
-      // Format or validate orderId if needed
-
-      const response = await snap.transaction
+      snap.transaction
         .status(req.params.orderId)
-        .then((response) => response); // Return response object
+        .then(async (response) => {
+          const order = await Order.findOne({ orderId: req.params.orderId });
 
-      return res.status(200).json(response); // Return response to client
+          order.paymentStatus = response.transaction_status;
+
+          await order.save();
+
+          let message = "";
+
+          if (order.paymentStatus === "settlement") {
+            message = "Pembayaran diterima";
+          } else if (order.paymentStatus === "pending") {
+            message = "Menunggu pembayaran";
+          } else if (order.paymentStatus === "expire") {
+            message = "Pembayaran kaladuarsa";
+          }
+
+          res.status(200).json({ message });
+        })
+        .catch((error) => {
+          res.status(404).json({ error: "Order tidak ditemukan" });
+        });
     } catch (error) {
-      if (error.statusCode === 404) {
-        // Example: Specific error handling
-        return res.status(404).json({ error: "Order not found" });
-      } else {
-        // Handle other error codes or general errors
-        return res.status(500).json({ error: error.message });
-      }
+      return res.status(500).json({ error: error.message });
     }
   }
 );
