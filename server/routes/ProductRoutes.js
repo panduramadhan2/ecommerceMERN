@@ -94,4 +94,105 @@ router.put("/update/:id", authenticate(["admin"]), async (req, res) => {
   }
 });
 
+// router.post("/give-review/:id", authenticate(["user"]), async (req, res) => {
+//   try {
+//     const product = await Product.findById(req.params.id);
+//     console.log(req.body);
+
+//     if (!product) {
+//       return res.status(404).json({ error: "Product tidak ditemukan" });
+//     }
+//     const newReview = {
+//       user: req.user._id,
+//       rating: req.body.rating,
+//       review: req.body.review,
+//     };
+
+//     const isReview = product.reviews.find(
+//       (r) => r.user.toString() === req.user._id.toString()
+//     );
+//     if (isReview) {
+//       product.reviews.forEach((r) => {
+//         if (r.user.toString() === req.user._id.toString()) {
+//           (r.rating = req.body.rating), (r.review = req.body.review);
+//         }
+//       });
+//       product.rating = Math.round(
+//         product.reviews.reduce((acc, r) => acc + r.rating, 0) /
+//           product.review.length
+//       );
+//       await product.save();
+//       res.status(200).json({ message: "Review berhasil diperbarui" });
+//     } else {
+//       product.reviews.push(newReview);
+
+//       product.rating = Math.round(
+//         product.reviews.reduce((acc, r) => acc + r.rating, 0) /
+//           product.review.length
+//       );
+//       await product.save();
+
+//       res.status(200).json({ message: "Review berhasil disimpan" });
+//     }
+//   } catch (error) {
+//     return res.status(500).json({ error: error.message });
+//   }
+// });
+router.post("/give-review/:id", authenticate(["user"]), async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+
+    if (!product) {
+      return res.status(404).json({ error: "Product tidak temukan" });
+    }
+
+    const newReview = {
+      user: req.user.name,
+      product: product._id,
+      rating: req.body.rating,
+      review: req.body.review,
+    };
+
+    const isReview = product.reviews.find(
+      (r) =>
+        r.user === req.user.name &&
+        r.product.toString() === product._id.toString()
+    );
+
+    if (isReview) {
+      product.reviews.forEach((r) => {
+        if (
+          r.user === req.user.name &&
+          r.product.toString() === product._id.toString()
+        ) {
+          (r.rating = req.body.rating), (r.review = req.body.review);
+        }
+      });
+
+      product.rating = Math.round(
+        product.reviews.reduce((acc, r) => acc + r.rating, 0) /
+          product.reviews.length
+      );
+
+      await product.save();
+
+      res.status(200).json({ message: "Review berhasil diperbarui" });
+    } else {
+      product.reviews.push(newReview);
+
+      product.rating = Math.round(
+        product.reviews.reduce((acc, r) => acc + r.rating, 0) /
+          product.reviews.length
+      );
+
+      await product.save();
+
+      res.status(200).json({ message: "Review berhasil disimpan" });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: error.message });
+  }
+});
+
 export default router;

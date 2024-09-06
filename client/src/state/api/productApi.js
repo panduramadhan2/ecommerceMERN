@@ -13,7 +13,18 @@ export const productApi = createApi({
     getProduct: builder.query({
       query: (name) => `${name}`,
     }),
+    giveReview: builder.mutation({
+      query: ({ id, body }) => ({
+        url: `/give-review/${id}`,
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
-export const { useGetProductsQuery, useGetProductQuery } = productApi;
+export const {
+  useGetProductsQuery,
+  useGetProductQuery,
+  useGiveReviewMutation,
+} = productApi;

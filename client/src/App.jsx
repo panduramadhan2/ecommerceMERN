@@ -1,5 +1,6 @@
 import "./App.css";
 import "izitoast/dist/css/iziToast.min.css";
+import 'react-quill/dist/quill.snow.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/home/Home";
 import DetailProduct from "./pages/product/DetailProduct";
