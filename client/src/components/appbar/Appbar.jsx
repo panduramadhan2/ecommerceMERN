@@ -1,6 +1,6 @@
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
-// import Badge from "@mui/material/Badge";
+import Badge from "@mui/material/Badge";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import LoginIcon from "@mui/icons-material/Login";
@@ -13,14 +13,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../../state/api/authApi";
 import iziToast from "izitoast";
 import { authReset } from "../../state/slice/authSlice";
-// import { useMyCartQuery } from "../../state/api/cartApi";
+import { useMyCartQuery } from "../../state/api/cartApi";
 // import { useGetStoreDataQuery } from "../../state/api/storeApi";
 
 const Appbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // const { data } = useMyCartQuery();
+  const { data } = useMyCartQuery();
+  console.log(data);
+
   // const { data: store } = useGetStoreDataQuery();
 
   const { user, isLogout, message } = useSelector((state) => state.auth);
@@ -94,13 +96,21 @@ const Appbar = () => {
           </Box>
 
           <Box sx={{ display: "flex", gap: 1 }}>
+            <IconButton color="inherit" onClick={toCart}>
+              {/* <Badge badgeContent={data?.products.length} color="error"> */}
+              <Badge badgeContent={data?.products.length} color="error">
+                <ShoppingCartOutlinedIcon />
+              </Badge>
+              {/* </Badge> */}
+            </IconButton>
+            {/* dicontoh kayak gitu??? */}
             {user?.role === "user" ? (
               <>
-                <IconButton color="inherit" onClick={toCart}>
-                  {/* <Badge badgeContent={data?.products.length} color="error"> */}
-                  <ShoppingCartOutlinedIcon />
-                  {/* </Badge> */}
-                </IconButton>
+                {/* <IconButton color="inherit" onClick={toCart}> */}
+                {/* <Badge badgeContent={data?.products.length} color="error"> */}
+                {/* <ShoppingCartOutlinedIcon /> */}
+                {/* </Badge> */}
+                {/* </IconButton> */}
 
                 <IconButton color="inherit" onClick={menuOpen}>
                   <AccountCircleIcon />

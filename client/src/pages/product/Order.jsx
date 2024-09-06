@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import iziToast from "izitoast";
 import { useGetTokenMutation } from "../../state/api/paymentApi";
 import { useCreateOrderMutation } from "../../state/api/orderApi";
+import { useCreateCartMutation } from "../../state/api/cartApi";
 
 const Order = ({ product }) => {
   const { isAuth, user } = useSelector((state) => state.auth);
@@ -39,6 +40,10 @@ const Order = ({ product }) => {
     },
     { skip: !city || !courier }
   );
+  const [
+    createCart,
+    { data: message, isSuccess: cartSuccess, isLoading: cartLoading, error },
+  ] = useCreateCartMutation();
 
   const services = servicesData && servicesData[0]?.costs;
   // const services = servicesData[0]?.costs;
@@ -62,33 +67,32 @@ const Order = ({ product }) => {
     }
   };
 
-  useEffect(() => {
-    if (product) {
-      setSubtotal(product?.price);
-    }
-  }, [product]);
-
   const cartHandler = () => {
     if (!isAuth) {
-      iziToast.error({
+      return iziToast.error({
         title: "Error",
         message: "Login dulu",
         position: "topRight",
         timeout: 3000,
       });
     }
-    if (!address) {
-      iziToast.error({
-        title: "Error",
-        message: "Masukan alamat",
-        position: "topRight",
-        timeout: 3000,
-      });
-    }
+    // if (!address) {
+    //   return iziToast.error({
+    //     title: "Error",
+    //     message: "Masukan alamat",
+    //     position: "topRight",
+    //     timeout: 3000,
+    //   });
+    // }
+    const data = {
+      productId: product?._id,
+      qty: qty,
+    };
+    createCart(data);
   };
   const buyHandler = () => {
     if (!isAuth) {
-      iziToast.error({
+      return iziToast.error({
         title: "Error",
         message: "Login dulu",
         position: "topRight",
@@ -96,7 +100,7 @@ const Order = ({ product }) => {
       });
     }
     if (!address) {
-      iziToast.error({
+      return iziToast.error({
         title: "Error",
         message: "Masukan alamat",
         position: "topRight",
@@ -112,6 +116,12 @@ const Order = ({ product }) => {
     };
     getToken(data);
   };
+
+  useEffect(() => {
+    if (product) {
+      setSubtotal(product?.price);
+    }
+  }, [product]);
 
   useEffect(() => {
     if (token) {
@@ -218,6 +228,25 @@ const Order = ({ product }) => {
       reset();
     }
   }, [isSuccess, reset]);
+
+  useEffect(() => {
+    if (cartSuccess) {
+      iziToast.success({
+        title: "Success",
+        message: message?.message,
+        position: "topRight",
+        timeout: 3000,
+      });
+    }
+    if (error) {
+      iziToast.error({
+        title: "Error",
+        message: error?.data.error,
+        position: "topRight",
+        timeout: 3000,
+      });
+    }
+  }, [message, cartSuccess, cartLoading, error]);
 
   return (
     <Box
