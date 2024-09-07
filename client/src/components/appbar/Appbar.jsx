@@ -21,7 +21,6 @@ const Appbar = () => {
   const dispatch = useDispatch();
 
   const { data } = useMyCartQuery();
-  console.log(data);
 
   // const { data: store } = useGetStoreDataQuery();
 

@@ -1,10 +1,10 @@
 import "./App.css";
 import "izitoast/dist/css/iziToast.min.css";
-import 'react-quill/dist/quill.snow.css';
+import "react-quill/dist/quill.snow.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/home/Home";
 import DetailProduct from "./pages/product/DetailProduct";
-import Cart from "./pages/cart/Cart";
+import Cart from "./pages/user/cart/Cart";
 import Profile from "./pages/user/Profile";
 import Orders from "./pages/user/order/Orders";
 import Dashboard from "./pages/admin/dashboard/Dashboard";
