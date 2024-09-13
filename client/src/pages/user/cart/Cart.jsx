@@ -4,11 +4,17 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Order from "./Order";
-import { useMyCartQuery } from "../../../state/api/cartApi";
+import {
+  useDeleteProductMutation,
+  useMyCartQuery,
+} from "../../../state/api/cartApi";
 import { useEffect, useState } from "react";
+import iziToast from "izitoast";
 
 const Cart = () => {
   const { data } = useMyCartQuery();
+  const [deleteProduct, { data: message, isSuccess, isLoading, error }] =
+    useDeleteProductMutation();
   const products = data?.products;
 
   const [qty, setQty] = useState({});
@@ -53,6 +59,8 @@ const Cart = () => {
     });
   };
 
+  const deleteHandler = (productId) => deleteProduct(productId);
+
   useEffect(() => {
     const initialQty = {};
     const initialPrice = {};
@@ -65,6 +73,25 @@ const Cart = () => {
     setQty(initialQty);
     setPrice(initialPrice);
   }, [products]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      iziToast.success({
+        title: "Success",
+        message: message?.message,
+        position: "topRight",
+        timeout: 3000,
+      });
+    }
+    if (error) {
+      iziToast.error({
+        title: "Error",
+        message: error?.data.error,
+        position: "topRight",
+        timeout: 3000,
+      });
+    }
+  }, [isSuccess, message, error]);
 
   return (
     <>
@@ -121,7 +148,9 @@ const Cart = () => {
                         justifyContent: "end",
                       }}
                     >
-                      <IconButton>
+                      <IconButton
+                        onClick={() => deleteHandler(product?.productId._id)}
+                      >
                         <DeleteIcon />
                       </IconButton>
                       <Box

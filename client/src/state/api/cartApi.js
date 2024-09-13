@@ -23,7 +23,23 @@ export const cartApi = createApi({
           );
       },
     }),
+    deleteProduct: builder.mutation({
+      query: (id) => ({
+        url: `/delete-product/${id}`,
+        method: "DELETE",
+      }),
+      async onQueryStarted(queryArg, { dispatch, queryFulfilled }) {
+        await queryFulfilled,
+          await dispatch(
+            cartApi.endpoints.myCart.initiate(undefined, { forceRefetch: true })
+          );
+      },
+    }),
   }),
 });
 
-export const { useCreateCartMutation, useMyCartQuery } = cartApi;
+export const {
+  useCreateCartMutation,
+  useMyCartQuery,
+  useDeleteProductMutation,
+} = cartApi;
