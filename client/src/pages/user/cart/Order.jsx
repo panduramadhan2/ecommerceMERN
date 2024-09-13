@@ -3,13 +3,36 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import SelectOptions from "./SelectOptions";
 import { useState } from "react";
+import {
+  useGetCitiesQuery,
+  useGetProvincesQuery,
+  useGetServicesQuery,
+} from "../../../state/api/shipmentApi";
 
-const Order = () => {
+const Order = ({ subtotal, totalWeight }) => {
   const [province, setProvince] = useState("");
   const [city, setCity] = useState("");
   const [courier, setCourier] = useState("");
   const [service, setService] = useState("");
   const [address, setAddress] = useState("");
+
+  const origin = "78";
+
+  const { data: provinces } = useGetProvincesQuery();
+  const { data: cities } = useGetCitiesQuery(province, { skip: !province });
+  const { data: servicesData } = useGetServicesQuery(
+    {
+      origin,
+      destination: city,
+      weight: totalWeight,
+      courier,
+    },
+    { skip: !city || !courier }
+  );
+
+  const services = servicesData && servicesData[0]?.costs;
+
+  const total = subtotal + service;
 
   return (
     <Box
@@ -20,48 +43,10 @@ const Order = () => {
         display: "flex",
         flexDirection: "column",
         gap: "10px",
-        height: "660px",
+        height: "560px",
         boxShadow: 6,
       }}
     >
-      <Typography variant="h5" fontWeight="bold">
-        Atur Jumlah
-      </Typography>
-      <Box sx={{ display: "flex", gap: "15px", padding: "5px" }}>
-        <Box
-          sx={{
-            display: "flex",
-            gap: "15px",
-            padding: "2px",
-          }}
-        >
-          <IconButton>
-            <RemoveIcon />
-          </IconButton>
-          <Box
-            sx={{
-              width: 50,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            1
-          </Box>
-          <IconButton>
-            <AddIcon />
-          </IconButton>
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          Total Stok: 30
-        </Box>
-      </Box>
       <Box
         sx={{
           display: "flex",
@@ -73,7 +58,7 @@ const Order = () => {
           Subtotal
         </Typography>
         <Typography fontWeight="bold" fontSize={20}>
-          Rp 3.000.000
+          Rp {subtotal && subtotal.toLocaleString("id-ID")}
         </Typography>
       </Box>
       <Typography fontWeight="bold">Alamat Pengiriman</Typography>
@@ -84,6 +69,9 @@ const Order = () => {
           kurir={(c) => setCourier(c)}
           layanan={(s) => setService(s)}
           alamat={(a) => setAddress(a)}
+          provinces={provinces}
+          cities={cities}
+          services={services}
         />
       </Box>
       <Box
@@ -97,7 +85,7 @@ const Order = () => {
           Ongkir
         </Typography>
         <Typography fontWeight="bold" fontSize={20}>
-          Rp 3.000.000
+          Rp {parseFloat(service ? service : 0).toLocaleString("id-ID")}
         </Typography>
       </Box>
       <Box
@@ -111,7 +99,7 @@ const Order = () => {
           Total
         </Typography>
         <Typography fontWeight="bold" fontSize={20}>
-          Rp 3.000.000
+          Rp {parseFloat(total).toLocaleString("id-ID")}
         </Typography>
       </Box>
 

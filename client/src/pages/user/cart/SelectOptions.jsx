@@ -1,7 +1,16 @@
 import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { useEffect, useState } from "react";
 
-const SelectOptions = ({ provinsi, kota, kurir, layanan, alamat }) => {
+const SelectOptions = ({
+  provinsi,
+  kota,
+  kurir,
+  layanan,
+  alamat,
+  provinces,
+  cities,
+  services,
+}) => {
   const [province, setProvince] = useState("");
   const [city, setCity] = useState("");
   const [courier, setCourier] = useState("");
@@ -48,9 +57,11 @@ const SelectOptions = ({ provinsi, kota, kurir, layanan, alamat }) => {
           label="Provinsi"
           onChange={handleProvince}
         >
-          <MenuItem value="Jawa Barat">Jawa Barat</MenuItem>
-          <MenuItem value="Jawa Tengah">Jawa Tengah</MenuItem>
-          <MenuItem value="Jawa Timur">Jawa Timur</MenuItem>
+          {provinces?.map((item) => (
+            <MenuItem key={item.province_id} value={item.province_id}>
+              {item.province}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
       <FormControl fullWidth>
@@ -62,9 +73,12 @@ const SelectOptions = ({ provinsi, kota, kurir, layanan, alamat }) => {
           label="Kota / Kabupaten"
           onChange={handleCity}
         >
-          <MenuItem value="Kota Bogor">Kota Bogor</MenuItem>
-          <MenuItem value="Kabupaten Bogor">Kabupaten Bogor</MenuItem>
-          <MenuItem value="Depok">Depok</MenuItem>
+          {cities?.map((item) => (
+            <MenuItem
+              key={item.city_id}
+              value={item.city_id}
+            >{`${item.type} ${item.city_name}`}</MenuItem>
+          ))}
         </Select>
       </FormControl>
       <FormControl fullWidth>
@@ -90,9 +104,13 @@ const SelectOptions = ({ provinsi, kota, kurir, layanan, alamat }) => {
           label="Layanan"
           onChange={handleService}
         >
-          <MenuItem value="Layanan 1">Layanan 1</MenuItem>
-          <MenuItem value="Layanan 2">Layanan 2</MenuItem>
-          <MenuItem value="Layanan 3">Layanan 3</MenuItem>
+          {services?.map((item) => (
+            <MenuItem key={item.service} value={item.cost[0].value}>{`${
+              item.service
+            } Rp ${parseFloat(item.cost[0].value).toLocaleString("id-ID")} ${
+              item.cost[0].etd
+            } Hari`}</MenuItem>
+          ))}
         </Select>
       </FormControl>
 

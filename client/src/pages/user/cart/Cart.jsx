@@ -19,12 +19,21 @@ const Cart = () => {
 
   const [qty, setQty] = useState({});
   const [price, setPrice] = useState({});
+  const [weight, setWeight] = useState({});
 
   const updatePrice = (productId, newQty) => {
     setPrice((prevPrice) => ({
       ...prevPrice,
       [productId]:
         products.find((p) => p.productId._id === productId).productId.price *
+        newQty,
+    }));
+  };
+  const updateWeight = (productId, newQty) => {
+    setWeight((prevWeight) => ({
+      ...prevWeight,
+      [productId]:
+        products.find((p) => p.productId._id === productId).productId.weight *
         newQty,
     }));
   };
@@ -41,6 +50,7 @@ const Cart = () => {
       ) {
         newQty[productId] += 1;
         updatePrice(productId, newQty[productId]);
+        updateWeight(productId, newQty[productId]);
       }
       return newQty;
     });
@@ -54,6 +64,7 @@ const Cart = () => {
       if (newQty[productId] > 1) {
         newQty[productId] -= 1;
         updatePrice(productId, newQty[productId]);
+        updateWeight(productId, newQty[productId]);
       }
       return newQty;
     });
@@ -64,14 +75,18 @@ const Cart = () => {
   useEffect(() => {
     const initialQty = {};
     const initialPrice = {};
+    const initialWeight = {};
 
     products?.forEach((product) => {
       initialQty[product.productId._id] = product.qty;
       initialPrice[product.productId._id] =
         product.productId.price * product.qty;
+      initialWeight[product.productId._id] =
+        product.productId.weight * product.qty;
     });
     setQty(initialQty);
     setPrice(initialPrice);
+    setWeight(initialWeight);
   }, [products]);
 
   useEffect(() => {
@@ -92,6 +107,20 @@ const Cart = () => {
       });
     }
   }, [isSuccess, message, error]);
+
+  const calculateTotalPrice = () => {
+    return Object.values(price).reduce(
+      (acc, currentPrice) => acc + currentPrice,
+      0
+    );
+  };
+
+  const calculateTotalWeight = () => {
+    return Object.values(weight).reduce(
+      (acc, currentWeight) => acc + currentWeight,
+      0
+    );
+  };
 
   return (
     <>
@@ -137,7 +166,7 @@ const Cart = () => {
                       price[product?.productId._id]
                     ).toLocaleString("id-ID")}`}</Typography>
                     <Typography fontSize={14} fontStyle="italic">
-                      {product.weight}gram
+                      {weight[product?.productId._id]}gram
                     </Typography>
 
                     <Box
@@ -195,7 +224,10 @@ const Cart = () => {
               justifyContent: "center",
             }}
           >
-            <Order />
+            <Order
+              subtotal={calculateTotalPrice()}
+              totalWeight={calculateTotalWeight()}
+            />
           </Box>
         </Box>
       </Box>
