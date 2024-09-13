@@ -122,6 +122,15 @@ const Cart = () => {
     );
   };
 
+  const orderProducts = () => {
+    return products.map((product) => ({
+      productId: product?.productId._id,
+      qty: qty[product?.productId._id],
+      totalPrice: price[product?.productId._id],
+      profit: product?.productId.profit * qty[product?.productId._id],
+    }));
+  };
+
   return (
     <>
       <Appbar />
@@ -227,6 +236,7 @@ const Cart = () => {
             <Order
               subtotal={calculateTotalPrice()}
               totalWeight={calculateTotalWeight()}
+              products={orderProducts()}
             />
           </Box>
         </Box>

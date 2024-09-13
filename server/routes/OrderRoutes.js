@@ -1,6 +1,7 @@
 import express from "express";
 import { authenticate } from "../middleware/authenticate.js";
 import Order from "../models/Order.js";
+import Cart from "../models/Cart.js";
 
 const router = express.Router();
 
@@ -9,6 +10,25 @@ router.post("/create", authenticate(["user"]), async (req, res) => {
     await Order.create(req.body);
 
     res.status(200).json({ message: "Pesanan berhasil disimpan" });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+router.post("/create-from-cart", authenticate(["user"]), async (req, res) => {
+  try {
+    const cart = await Cart.find({ user: req.user._id });
+    if (cart) {
+      const productIds = req.body.products.map((product = product.productId));
+      cart.products = cart.products.filter((cartProduct) =>
+        productIds.includes(cartProduct.productId.toString())
+      );
+      await cart.save();
+    }
+    console.log(cart);
+
+    // await Order.create(req.body);
+    // res.status(200).json({ message: "Pesanan berhasil disimpan" });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
