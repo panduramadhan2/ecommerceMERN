@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loadUser, loginUser, logoutUser } from "../api/authApi";
+import { loadUser, loginUser, logoutUser, updateProfile } from "../api/authApi";
 
 const authSlice = createSlice({
   name: "auth",
@@ -10,6 +10,9 @@ const authSlice = createSlice({
     message: null,
     error: null,
     user: null,
+    isUpdateProfile: false,
+    isUpdateProfileLoading: false,
+    isUpdateProfileError: false,
   },
   reducers: {
     authReset: (state) => {
@@ -19,6 +22,13 @@ const authSlice = createSlice({
       state.message = null;
       state.error = null;
       state.user = null;
+    },
+    profileReset: (state) => {
+      state.isUpdateProfileLoading = false;
+      state.isUpdateProfileError = false;
+      state.isUpdateProfile = false;
+      state.message = null;
+      state.error = null;
     },
   },
   extraReducers: (builder) => {
@@ -54,6 +64,20 @@ const authSlice = createSlice({
         state.user = null;
         state.error = action.payload;
       })
+      .addCase(updateProfile.pending, (state) => {
+        state.isUpdateProfileLoading = true;
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.isUpdateProfileLoading = false;
+        state.isUpdateProfile = true;
+        state.message = action.payload;
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
+        state.isUpdateProfileLoading = false;
+        state.isUpdateProfile = false;
+        state.isUpdateProfileError = true;
+        state.error = action.payload;
+      })
       .addCase(logoutUser.pending, (state) => {
         state.authLoading = true;
       })
@@ -73,6 +97,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { authReset } = authSlice.actions;
+export const { authReset, profileReset } = authSlice.actions;
 
 export default authSlice.reducer;

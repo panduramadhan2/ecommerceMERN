@@ -25,6 +25,22 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+export const updateProfile = createAsyncThunk(
+  "user/updateProfile",
+  async (userData, thunkApi) => {
+    try {
+      const { data } = await axios.put(
+        "/user/update-profile",
+        userData,
+        config
+      );
+      return data.message;
+    } catch (error) {
+      return thunkApi.rejectWithValue(error.response.data.error);
+    }
+  }
+);
+
 export const loadUser = createAsyncThunk(
   "user/loadUser",
   async (_, thunkApi) => {
