@@ -4,12 +4,14 @@ import GoogleIcon from "@mui/icons-material/Google";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../state/api/authApi";
+import iziToast from "izitoast";
+import { authReset } from "../../state/slice/authSlice";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { isAuth, authLoading } = useSelector((state) => state.auth);
+  const { isAuth, authLoading, error } = useSelector((state) => state.auth);
   // const { user } = useSelector((state) => state.auth);
 
   const [email, setEmail] = useState("");
@@ -30,7 +32,16 @@ const LoginPage = () => {
       navigate("/");
       localStorage.setItem("login", JSON.stringify("login"));
     }
-  }, [isAuth]);
+    if (error) {
+      iziToast.error({
+        title: "Error",
+        message: error,
+        position: "topRight",
+        timeout: 3000,
+      });
+      dispatch(authReset());
+    }
+  }, [isAuth, error]);
   return (
     <Box
       sx={{

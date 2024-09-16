@@ -2,9 +2,14 @@ import { Fragment, useEffect, useState } from "react";
 import Appbar from "../../components/appbar/Appbar";
 import { Box, Button, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { loadUser, updateProfile } from "../../state/api/authApi";
+import {
+  loadUser,
+  logoutUser,
+  updatePassword,
+  updateProfile,
+} from "../../state/api/authApi";
 import iziToast from "izitoast";
-import { profileReset } from "../../state/slice/authSlice";
+import { passwordReset, profileReset } from "../../state/slice/authSlice";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -13,6 +18,9 @@ const Profile = () => {
     isUpdateProfile,
     isUpdateProfileLoading,
     isUpdateProfileError,
+    isUpdatePassword,
+    isUpdatePasswordLoading,
+    isUpdatePasswordError,
     message,
     error,
   } = useSelector((state) => state.auth);
@@ -20,6 +28,8 @@ const Profile = () => {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [phone, setPhone] = useState("");
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
 
   const profileHandler = () => {
     const data = {
@@ -28,6 +38,15 @@ const Profile = () => {
       phone,
     };
     dispatch(updateProfile(data));
+  };
+
+  const passwordHandler = () => {
+    const data = {
+      username,
+      oldPassword,
+      newPassword,
+    };
+    dispatch(updatePassword(data));
   };
   useEffect(() => {
     if (user) {
@@ -57,6 +76,27 @@ const Profile = () => {
       });
     }
   }, [isUpdateProfile, message, isUpdateProfileError, error]);
+
+  useEffect(() => {
+    if (isUpdatePassword) {
+      iziToast.success({
+        title: "Success",
+        message: message,
+        position: "topRight",
+        timeout: 3000,
+      });
+      dispatch(logoutUser());
+      dispatch(passwordReset());
+    }
+    if (isUpdatePasswordError) {
+      iziToast.error({
+        title: "Error",
+        message: error,
+        position: "topRight",
+        timeout: 3000,
+      });
+    }
+  }, [isUpdatePassword, message, isUpdatePasswordError, error]);
   return (
     <Fragment>
       <Appbar />
@@ -143,8 +183,22 @@ const Profile = () => {
               value={phone || ""}
               onChange={(e) => setPhone(e.target.value)}
             />
-            <TextField fullWidth label="Password Lama" sx={{ mb: 0.5 }} />
-            <TextField fullWidth label="Password Baru" sx={{ mb: 0.5 }} />
+            <TextField
+              fullWidth
+              type="password"
+              label="Password Lama"
+              sx={{ mb: 0.5 }}
+              value={oldPassword || ""}
+              onChange={(e) => setOldPassword(e.target.value)}
+            />
+            <TextField
+              fullWidth
+              type="password"
+              label="Password Baru"
+              sx={{ mb: 0.5 }}
+              value={newPassword || ""}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
             <Box
               sx={{
                 display: "flex",
@@ -153,8 +207,12 @@ const Profile = () => {
                 width: "100%",
               }}
             >
-              <Button variant="outlined" color="secondary">
-                Update Password
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={passwordHandler}
+              >
+                {isUpdatePasswordLoading ? "updating..." : "update password"}
               </Button>
               <Button variant="outlined" color="error" onClick={profileHandler}>
                 {isUpdateProfileLoading ? "updating..." : "update profile"}

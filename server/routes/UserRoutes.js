@@ -42,13 +42,15 @@ router.post("/login", async (req, res) => {
   try {
     passport.authenticate("local", (err, user) => {
       if (err) {
-        return res.status(500).json({ error: err.message });
+        return res.status(500).json({ message: err.message });
       } else if (!user) {
-        return res.status(404).json({ error: "Username atau password salah" });
+        return res
+          .status(404)
+          .json({ message: "Username atau password salah" });
       } else {
         req.login(user, function (err) {
           if (err) {
-            return res.status(500).json({ error: err.message });
+            return res.status(500).json({ message: err.message });
           }
           const token = generateToken(user);
           res.status(200).cookie("token", token).json({ isLogin: true, user });
@@ -56,7 +58,7 @@ router.post("/login", async (req, res) => {
       }
     })(req, res);
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ message: error.message });
   }
 });
 
@@ -83,8 +85,36 @@ router.put(
       });
       res.status(200).json({ message: "Berhasil diperbarui", user });
     } catch (error) {
-      return res.status(500).json({ error: error.message });
+      // return res.status(500).json({ error: error.message });
+      return res.status(500).json({ error: error });
     }
+  }
+);
+
+//Update password
+router.put(
+  "/change-password",
+  authenticate(["admin", "user"]),
+  async (req, res) => {
+    await User.findByUsername(req.body.username, (error, user) => {
+      if (error) {
+        return res.status(500).json({ message: error.message });
+      } else {
+        user.changePassword(
+          req.body.oldPassword,
+          req.body.newPassword,
+          (error) => {
+            if (error) {
+              return res.status(400).json({ message: "Password tidak sesuai" });
+            } else {
+              return res
+                .status(200)
+                .json({ message: "Password berhasil dirubah" });
+            }
+          }
+        );
+      }
+    });
   }
 );
 

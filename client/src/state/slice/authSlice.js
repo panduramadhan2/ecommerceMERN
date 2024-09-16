@@ -1,5 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loadUser, loginUser, logoutUser, updateProfile } from "../api/authApi";
+import {
+  loadUser,
+  loginUser,
+  logoutUser,
+  updateProfile,
+  updatePassword,
+} from "../api/authApi";
 
 const authSlice = createSlice({
   name: "auth",
@@ -13,6 +19,9 @@ const authSlice = createSlice({
     isUpdateProfile: false,
     isUpdateProfileLoading: false,
     isUpdateProfileError: false,
+    isUpdatePassword: false,
+    isUpdatePasswordLoading: false,
+    isUpdatePasswordError: false,
   },
   reducers: {
     authReset: (state) => {
@@ -27,6 +36,13 @@ const authSlice = createSlice({
       state.isUpdateProfileLoading = false;
       state.isUpdateProfileError = false;
       state.isUpdateProfile = false;
+      state.message = null;
+      state.error = null;
+    },
+    passwordReset: (state) => {
+      state.isUpdatePasswordLoading = false;
+      state.isUpdatePasswordError = false;
+      state.isUpdatePassword = false;
       state.message = null;
       state.error = null;
     },
@@ -78,6 +94,20 @@ const authSlice = createSlice({
         state.isUpdateProfileError = true;
         state.error = action.payload;
       })
+      .addCase(updatePassword.pending, (state) => {
+        state.isUpdatePasswordLoading = true;
+      })
+      .addCase(updatePassword.fulfilled, (state, action) => {
+        state.isUpdatePasswordLoading = false;
+        state.isUpdatePassword = true;
+        state.message = action.payload;
+      })
+      .addCase(updatePassword.rejected, (state, action) => {
+        state.isUpdatePasswordLoading = false;
+        state.isUpdatePassword = false;
+        state.isUpdatePasswordError = true;
+        state.error = action.payload;
+      })
       .addCase(logoutUser.pending, (state) => {
         state.authLoading = true;
       })
@@ -97,6 +127,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { authReset, profileReset } = authSlice.actions;
+export const { authReset, profileReset, passwordReset } = authSlice.actions;
 
 export default authSlice.reducer;

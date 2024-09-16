@@ -24,6 +24,18 @@ export const loginUser = createAsyncThunk(
     }
   }
 );
+// export const loginUser = createAsyncThunk(
+//   "user/login",
+//   async (userData, thunkApi) => {
+//     try {
+//       const { data } = await axios.post("/user/login", userData, config);
+
+//       return data.user;
+//     } catch (error) {
+//       return thunkApi.rejectWithValue(error.response.data.message);
+//     }
+//   }
+// );
 
 export const updateProfile = createAsyncThunk(
   "user/updateProfile",
@@ -37,6 +49,22 @@ export const updateProfile = createAsyncThunk(
       return data.message;
     } catch (error) {
       return thunkApi.rejectWithValue(error.response.data.error);
+    }
+  }
+);
+
+export const updatePassword = createAsyncThunk(
+  "user/updatePassword",
+  async (userData, thunkApi) => {
+    try {
+      const { data } = await axios.put(
+        "/user/change-password",
+        userData,
+        config
+      );
+      return data.message;
+    } catch (error) {
+      return thunkApi.rejectWithValue(error.response.data.message);
     }
   }
 );
