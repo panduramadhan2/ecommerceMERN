@@ -123,7 +123,7 @@ const Cart = () => {
   };
 
   const orderProducts = () => {
-    return products.map((product) => ({
+    return products?.map((product) => ({
       productId: product?.productId._id,
       qty: qty[product?.productId._id],
       totalPrice: price[product?.productId._id],

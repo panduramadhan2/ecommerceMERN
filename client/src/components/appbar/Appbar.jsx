@@ -95,21 +95,13 @@ const Appbar = () => {
           </Box>
 
           <Box sx={{ display: "flex", gap: 1 }}>
-            <IconButton color="inherit" onClick={toCart}>
-              {/* <Badge badgeContent={data?.products.length} color="error"> */}
-              <Badge badgeContent={data?.products.length} color="error">
-                <ShoppingCartOutlinedIcon />
-              </Badge>
-              {/* </Badge> */}
-            </IconButton>
-            {/* dicontoh kayak gitu??? */}
             {user?.role === "user" ? (
               <>
-                {/* <IconButton color="inherit" onClick={toCart}> */}
-                {/* <Badge badgeContent={data?.products.length} color="error"> */}
-                {/* <ShoppingCartOutlinedIcon /> */}
-                {/* </Badge> */}
-                {/* </IconButton> */}
+                <IconButton color="inherit" onClick={toCart}>
+                  <Badge badgeContent={data?.products.length} color="error">
+                    <ShoppingCartOutlinedIcon />
+                  </Badge>
+                </IconButton>
 
                 <IconButton color="inherit" onClick={menuOpen}>
                   <AccountCircleIcon />

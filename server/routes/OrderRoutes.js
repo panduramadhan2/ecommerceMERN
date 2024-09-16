@@ -17,18 +17,19 @@ router.post("/create", authenticate(["user"]), async (req, res) => {
 
 router.post("/create-from-cart", authenticate(["user"]), async (req, res) => {
   try {
-    const cart = await Cart.find({ user: req.user._id });
+    const cart = await Cart.findOne({ user: req.user._id });
+    console.log(cart);
+
     if (cart) {
-      const productIds = req.body.products.map((product = product.productId));
-      cart.products = cart.products.filter((cartProduct) =>
-        productIds.includes(cartProduct.productId.toString())
+      const productIds = req.body.products.map((product) => product.productId);
+      cart.products = cart.products.filter(
+        (cartProduct) => !productIds.includes(cartProduct.productId.toString())
       );
       await cart.save();
     }
-    console.log(cart);
 
-    // await Order.create(req.body);
-    // res.status(200).json({ message: "Pesanan berhasil disimpan" });
+    await Order.create(req.body);
+    res.status(200).json({ message: "Pesanan berhasil disimpan" });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }

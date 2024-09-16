@@ -47,33 +47,33 @@ const Order = ({ subtotal, totalWeight, products }) => {
   const token = data?.token;
 
   const buyHandler = () => {
-    // if (!address) {
-    //   return iziToast.error({
-    //     title: "Error",
-    //     message: "Masukan alamat",
-    //     position: "topRight",
-    //     timeout: 3000,
-    //   });
-    // }
-    // const data = {
-    //   orderId: id,
-    //   amount: total,
-    //   name: user?.name,
-    //   email: user?.username,
-    //   phone: user?.phone,
-    // };
-    // getToken(data);
-
+    if (!address) {
+      return iziToast.error({
+        title: "Error",
+        message: "Masukan alamat",
+        position: "topRight",
+        timeout: 3000,
+      });
+    }
     const data = {
-      products: products?.map((product) => ({
-        productId: product.productId,
-        qty: product.qty,
-        totalPrice: product.totalPrice,
-        profit: product.profit,
-      })),
+      orderId: id,
+      amount: total,
+      name: user?.name,
+      email: user?.username,
+      phone: user?.phone,
     };
-    cartOrder(data);
+    getToken(data);
   };
+  //   const data = {
+  //     products: products?.map((product) => ({
+  //       productId: product.productId,
+  //       qty: product.qty,
+  //       totalPrice: product.totalPrice,
+  //       profit: product.profit,
+  //     })),
+  //   };
+  //   cartOrder(data);
+  // };
 
   useEffect(() => {
     if (token) {
