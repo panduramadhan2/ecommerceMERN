@@ -4,7 +4,25 @@ import jwt from "jsonwebtoken";
 import passport from "passport";
 import { authenticate } from "../middleware/authenticate.js";
 import SendEmail from "../utils/Sendemail.js";
+import multer from "multer";
+import path from "path";
 
+const avatarStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./upload/avatar");
+  },
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      path.parse(file.originalname).name +
+        "-" +
+        Date.now() +
+        path.extname(file.originalname)
+    );
+  },
+});
+
+const uploadAvatar = multer({ storage: avatarStorage });
 const router = express.Router();
 
 function generateToken(user) {
@@ -118,6 +136,24 @@ router.put(
   }
 );
 
+//upload avatar
+router.post(
+  "/upload-avatar",
+  authenticate(["admin", "user"]),
+  uploadAvatar.single("file"),
+  async (req, res) => {
+    try {
+      const user = await User.findById(req.user._id);
+      const imageLink = process.env.SERVER + "/avatar/" + req.file.filename;
+      user.avatar = imageLink;
+      await user.save();
+      res.status(200).json({ message: "Avatar berhasil disimpan" });
+    } catch (error) {
+      return res.status(500).json({ message: error });
+    }
+  }
+);
+
 // Menampilkan seluruh user
 router.get("/get", authenticate(["admin"]), async (req, res) => {
   try {
@@ -125,7 +161,8 @@ router.get("/get", authenticate(["admin"]), async (req, res) => {
     const users = data.filter((user) => user.role === "user");
     res.status(200).json(users);
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    // return res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error });
   }
 });
 

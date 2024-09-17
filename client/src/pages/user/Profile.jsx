@@ -1,15 +1,20 @@
 import { Fragment, useEffect, useState } from "react";
 import Appbar from "../../components/appbar/Appbar";
-import { Box, Button, TextField } from "@mui/material";
+import { Avatar, Box, Button, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
   loadUser,
   logoutUser,
   updatePassword,
   updateProfile,
+  uploadAvatar,
 } from "../../state/api/authApi";
 import iziToast from "izitoast";
-import { passwordReset, profileReset } from "../../state/slice/authSlice";
+import {
+  avatarReset,
+  passwordReset,
+  profileReset,
+} from "../../state/slice/authSlice";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -21,6 +26,9 @@ const Profile = () => {
     isUpdatePassword,
     isUpdatePasswordLoading,
     isUpdatePasswordError,
+    isUploadAvatar,
+    isUploadAvatarLoading,
+    isUploadAvatarError,
     message,
     error,
   } = useSelector((state) => state.auth);
@@ -48,6 +56,18 @@ const Profile = () => {
     };
     dispatch(updatePassword(data));
   };
+
+  const avatarHandler = () => {
+    document.getElementById("avatarInput").click();
+  };
+
+  const avatar = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      dispatch(uploadAvatar(file));
+    }
+  };
+
   useEffect(() => {
     if (user) {
       setName(user?.name);
@@ -97,6 +117,28 @@ const Profile = () => {
       });
     }
   }, [isUpdatePassword, message, isUpdatePasswordError, error]);
+
+  useEffect(() => {
+    if (isUploadAvatar) {
+      iziToast.success({
+        title: "Success",
+        message: message,
+        position: "topRight",
+        timeout: 3000,
+      });
+      dispatch(loadUser());
+      dispatch(avatarReset());
+    }
+    if (isUploadAvatarError) {
+      iziToast.error({
+        title: "Error",
+        message: error,
+        position: "topRight",
+        timeout: 3000,
+      });
+    }
+  }, [isUploadAvatar, message, isUploadAvatarError, error]);
+
   return (
     <Fragment>
       <Appbar />
@@ -133,7 +175,9 @@ const Profile = () => {
                 borderTopRightRadius: "10px",
               }}
             />
-            <Box
+            <Avatar
+              alt={user?.name}
+              src={user?.avatar}
               sx={{
                 position: "absolute",
                 height: 150,
@@ -146,10 +190,17 @@ const Profile = () => {
                 alignItems: "center",
                 justifyContent: "center",
                 border: "2px solid white",
+                cursor: "pointer",
               }}
-            >
-              avatar
-            </Box>
+              onClick={avatarHandler}
+            />
+            <input
+              type="file"
+              id="avatarInput"
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={avatar}
+            />
           </Box>
           {/* detail */}
           <Box

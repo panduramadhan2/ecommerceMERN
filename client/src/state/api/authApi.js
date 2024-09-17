@@ -9,6 +9,12 @@ const config = {
   },
   withCredentials: true,
 };
+const configImg = {
+  headers: {
+    "Content-Type": "multipart/form-data",
+  },
+  withCredentials: true,
+};
 
 export const loginUser = createAsyncThunk(
   "auth/login",
@@ -62,6 +68,25 @@ export const updatePassword = createAsyncThunk(
         userData,
         config
       );
+      return data.message;
+    } catch (error) {
+      return thunkApi.rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
+export const uploadAvatar = createAsyncThunk(
+  "user/uploadAvatar",
+  async (file, thunkApi) => {
+    try {
+      const avatar = new FormData();
+      avatar.append("file", file);
+      const { data } = await axios.post(
+        "/user/upload-avatar",
+        avatar,
+        configImg
+      );
+
       return data.message;
     } catch (error) {
       return thunkApi.rejectWithValue(error.response.data.message);

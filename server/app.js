@@ -11,9 +11,14 @@ import productRoutes from "./routes/ProductRoutes.js";
 import cartRoutes from "./routes/CartRoutes.js";
 import shippingRoutes from "./routes/ShippingRoutes.js";
 import paymentRoutes from "./routes/PaymentRoutes.js";
-import orderRoutes from "./routes/OrderRoutes.js";
 import { Strategy as GoogleStrategy } from "passport-google-oauth2";
 import googleRoutes from "./routes/GoogleRoutes.js";
+import orderRoutes from "./routes/OrderRoutes.js";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(
@@ -26,6 +31,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "upload")));
 
 app.use(
   session({

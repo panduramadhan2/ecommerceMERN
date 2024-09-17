@@ -5,6 +5,7 @@ import {
   logoutUser,
   updateProfile,
   updatePassword,
+  uploadAvatar,
 } from "../api/authApi";
 
 const authSlice = createSlice({
@@ -22,6 +23,9 @@ const authSlice = createSlice({
     isUpdatePassword: false,
     isUpdatePasswordLoading: false,
     isUpdatePasswordError: false,
+    isUploadAvatar: false,
+    isUploadAvatarLoading: false,
+    isUploadAvatarError: false,
   },
   reducers: {
     authReset: (state) => {
@@ -43,6 +47,13 @@ const authSlice = createSlice({
       state.isUpdatePasswordLoading = false;
       state.isUpdatePasswordError = false;
       state.isUpdatePassword = false;
+      state.message = null;
+      state.error = null;
+    },
+    avatarReset: (state) => {
+      state.isUploadAvatarLoading = false;
+      state.isUploadAvatarError = false;
+      state.isUploadAvatar = false;
       state.message = null;
       state.error = null;
     },
@@ -108,6 +119,20 @@ const authSlice = createSlice({
         state.isUpdatePasswordError = true;
         state.error = action.payload;
       })
+      .addCase(uploadAvatar.pending, (state) => {
+        state.isUploadAvatarLoading = true;
+      })
+      .addCase(uploadAvatar.fulfilled, (state, action) => {
+        state.isUploadAvatarLoading = false;
+        state.isUploadAvatar = true;
+        state.message = action.payload;
+      })
+      .addCase(uploadAvatar.rejected, (state, action) => {
+        state.isUploadAvatarLoading = false;
+        state.isUploadAvatar = false;
+        state.isUploadAvatarError = true;
+        state.error = action.payload;
+      })
       .addCase(logoutUser.pending, (state) => {
         state.authLoading = true;
       })
@@ -127,6 +152,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { authReset, profileReset, passwordReset } = authSlice.actions;
+export const { authReset, profileReset, passwordReset, avatarReset } =
+  authSlice.actions;
 
 export default authSlice.reducer;
