@@ -25,6 +25,9 @@ export const orderApi = createApi({
       query: () => "/my-order",
       method: "GET",
     }),
+    getOrders: builder.query({
+      query: () => "get-orders",
+    }),
   }),
 });
 
@@ -32,4 +35,5 @@ export const {
   useCreateOrderMutation,
   useGetMyOrderMutation,
   useCartOrderMutation,
+  useGetOrdersQuery,
 } = orderApi;

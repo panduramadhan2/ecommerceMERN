@@ -1,55 +1,59 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, Paper, Typography } from "@mui/material";
+import GroupIcon from "@mui/icons-material/Group";
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import InventoryIcon from "@mui/icons-material/Inventory";
+import "./styles.css";
 
-const Data = () => {
+const Data = ({ orders }) => {
+  const compliteOrder = orders?.filter(
+    (order) => order.paymentStatus === "settlement"
+  );
   return (
-    <Box
-      sx={{
-        width: "95%",
-        height: "15%",
-        borderRadius: "5px",
-        boxShadow: 4,
-        p: 1,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 2,
-      }}
-    >
-      <Button
-        variant="outlined"
-        color="warning"
-        sx={{ height: 80, width: 130 }}
-      >
-        data 1
-      </Button>
-      <Button
-        variant="outlined"
-        color="warning"
-        sx={{ height: 80, width: 130 }}
-      >
-        data 2
-      </Button>
-      <Button
-        variant="outlined"
-        color="warning"
-        sx={{ height: 80, width: 130 }}
-      >
-        data 3
-      </Button>
-      <Button
-        variant="outlined"
-        color="warning"
-        sx={{ height: 80, width: 130 }}
-      >
-        data 4
-      </Button>
-      <Button
-        variant="outlined"
-        color="warning"
-        sx={{ height: 80, width: 130 }}
-      >
-        data 5
-      </Button>
+    <Box className="layout">
+      <Paper className="paper" sx={{ bgcolor: "#62FF31" }}>
+        <GroupIcon className="icon" />
+        <Box className="text">
+          <Typography>Pelanggan</Typography>
+          <Typography>100</Typography>
+        </Box>
+      </Paper>
+      <Paper className="paper" sx={{ bgcolor: "#606DFF" }}>
+        <InventoryIcon className="icon" />
+        <Box className="text">
+          <Typography>Produk</Typography>
+          <Typography>100</Typography>
+        </Box>
+      </Paper>
+      <Paper className="paper" sx={{ bgcolor: "#FF9440" }}>
+        <AccountBalanceIcon className="icon" />
+        <Box className="text">
+          <Typography>Total Transaksi</Typography>
+          <Typography>{orders?.length}</Typography>
+        </Box>
+      </Paper>
+      <Paper className="paper" sx={{ bgcolor: "#FDB0AF" }}>
+        <MonetizationOnIcon className="icon" />
+        <Box className="text">
+          <Typography>Transaksi Berhasil</Typography>
+          <Typography>{compliteOrder?.length}</Typography>
+        </Box>
+      </Paper>
+
+      <Paper className="paper" sx={{ bgcolor: "#88FEFF" }}>
+        <AccountBalanceIcon className="icon" />
+        <Box className="text">
+          <Typography>Penjualan</Typography>
+          <Typography>100</Typography>
+        </Box>
+      </Paper>
+      <Paper className="paper" sx={{ bgcolor: "#39FF83" }}>
+        <MonetizationOnIcon className="icon" />
+        <Box className="text">
+          <Typography>Profit</Typography>
+          <Typography>100</Typography>
+        </Box>
+      </Paper>
     </Box>
   );
 };

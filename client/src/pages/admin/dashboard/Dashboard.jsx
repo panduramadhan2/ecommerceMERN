@@ -3,8 +3,10 @@ import AdminBar from "../components/appbar/AdminBar";
 import { Box } from "@mui/material";
 import Data from "./Data";
 import Transactions from "./Transactions";
+import { useGetOrdersQuery } from "../../../state/api/orderApi";
 
 const Dashboard = () => {
+  const { data: orders } = useGetOrdersQuery();
   return (
     <Fragment>
       <AdminBar />
@@ -19,7 +21,7 @@ const Dashboard = () => {
           gap: 2,
         }}
       >
-        <Data />
+        <Data orders={orders} />
         <Transactions />
       </Box>
     </Fragment>
