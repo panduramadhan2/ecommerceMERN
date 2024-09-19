@@ -5,6 +5,7 @@ import { shipmentApi } from "./api/shipmentApi";
 import { paymentApi } from "./api/paymentApi";
 import { orderApi } from "./api/orderApi";
 import { cartApi } from "./api/cartApi";
+import { userApi } from "./api/userApi";
 
 const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ const store = configureStore({
     [paymentApi.reducerPath]: paymentApi.reducer,
     [orderApi.reducerPath]: orderApi.reducer,
     [cartApi.reducerPath]: cartApi.reducer,
+    [userApi.reducerPath]: userApi.reducer,
   },
 
   middleware: (getDefaultMiddleware) =>
@@ -23,6 +25,7 @@ const store = configureStore({
       paymentApi.middleware,
       orderApi.middleware,
       cartApi.middleware,
+      userApi.middleware,
     ]),
 });
 

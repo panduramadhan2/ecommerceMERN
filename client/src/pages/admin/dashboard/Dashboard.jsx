@@ -4,9 +4,13 @@ import { Box } from "@mui/material";
 import Data from "./Data";
 import Transactions from "./Transactions";
 import { useGetOrdersQuery } from "../../../state/api/orderApi";
+import { useGetProductsQuery } from "../../../state/api/productApi";
+import { useGetUsersQuery } from "../../../state/api/userApi";
 
 const Dashboard = () => {
   const { data: orders } = useGetOrdersQuery();
+  const { data: products } = useGetProductsQuery();
+  const { data: users } = useGetUsersQuery();
   return (
     <Fragment>
       <AdminBar />
@@ -21,7 +25,7 @@ const Dashboard = () => {
           gap: 2,
         }}
       >
-        <Data orders={orders} />
+        <Data orders={orders} products={products} users={users}/>
         <Transactions />
       </Box>
     </Fragment>
