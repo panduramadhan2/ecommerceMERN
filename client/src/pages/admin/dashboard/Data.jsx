@@ -21,7 +21,7 @@ const Data = ({ orders, products, users }) => {
     0
   );
   return (
-    <Box className="layout">
+    <Box className="layout" sx={{ marginBottom: "3vh" }}>
       <Paper className="paper" sx={{ bgcolor: "#62FF31" }}>
         <GroupIcon className="icon" sx={{ fontSize: 50 }} />
         <Box className="text">

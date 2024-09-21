@@ -57,7 +57,7 @@ router.get("/my-order", authenticate(["user"]), async (req, res) => {
 router.get("/get-orders", authenticate(["admin"]), async (req, res) => {
   try {
     const order = await Order.find()
-      .populate({ path: "user" })
+      .populate({ path: "user", model: "user" })
       .sort({ createdAt: -1 });
     if (!order) {
       return res.status(404).json({ message: "Order tidak ditemukan" });
