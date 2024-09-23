@@ -58,10 +58,16 @@ router.get("/get-orders", authenticate(["admin"]), async (req, res) => {
   try {
     const order = await Order.find()
       .populate({ path: "user", model: "user" })
+      .populate({
+        path: "products",
+        populate: { path: "productId", model: "product" },
+      })
       .sort({ createdAt: -1 });
+
     if (!order) {
       return res.status(404).json({ message: "Order tidak ditemukan" });
     }
+
     res.status(200).json(order);
   } catch (error) {
     return res.status(500).json({ error: error.message });

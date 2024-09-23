@@ -7,6 +7,7 @@ import { useGetOrdersQuery } from "../../../state/api/orderApi";
 import { useGetProductsQuery } from "../../../state/api/productApi";
 import { useGetUsersQuery } from "../../../state/api/userApi";
 import Grid from "@mui/material/Unstable_Grid2";
+import Chart from "./Chart";
 
 const Dashboard = () => {
   const { data: orders } = useGetOrdersQuery();
@@ -32,7 +33,7 @@ const Dashboard = () => {
             <Transactions orders={orders} />
           </Grid>
           <Grid item md={6} sx={{ p: 1 }}>
-            chart
+            <Chart orders={orders} />
           </Grid>
         </Grid>
       </Box>

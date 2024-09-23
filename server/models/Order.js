@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import { Schema, model } from "mongoose";
 
 const orderSchema = new Schema(
   {
@@ -8,14 +8,14 @@ const orderSchema = new Schema(
     phone: { type: Number, required: true },
     subtotal: { type: Number, required: true },
     payment: { type: Number, required: true },
+    shipment: { type: String, required: true },
     shippingCost: { type: Number, required: true },
     paymentStatus: { type: String, default: "pending" },
-    // paymentStatus: { type: String },
     orderStatus: { type: String, default: "processing" },
     resi: { type: String },
     products: [
       {
-        productId: { type: Schema.Types.ObjectId, required: true },
+        productId: { type: Schema.Types.ObjectId, require: true },
         qty: { type: Number, required: true },
         totalPrice: { type: Number, required: true },
         profit: { type: Number, required: true },

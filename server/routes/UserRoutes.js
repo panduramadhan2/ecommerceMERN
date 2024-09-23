@@ -55,7 +55,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-//Login
+// Login
 router.post("/login", async (req, res) => {
   try {
     passport.authenticate("local", (err, user) => {
@@ -71,6 +71,7 @@ router.post("/login", async (req, res) => {
             return res.status(500).json({ message: err.message });
           }
           const token = generateToken(user);
+
           res.status(200).cookie("token", token).json({ isLogin: true, user });
         });
       }
