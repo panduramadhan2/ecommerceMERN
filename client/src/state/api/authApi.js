@@ -16,27 +16,40 @@ const configImg = {
   withCredentials: true,
 };
 
+// export const loginUser = createAsyncThunk(
+//   "auth/login",
+//   async (userData, thunkApi) => {
+//     try {
+//       const { data } = await axios.post("/user/login", userData, config);
+
+//       return data.user;
+//     } catch (error) {
+//       console.log(error);
+
+//       return thunkApi.rejectWithValue(error.response.data.message);
+//     }
+//   }
+// );
 export const loginUser = createAsyncThunk(
-  "auth/login",
+  "user/login",
   async (userData, thunkApi) => {
     try {
       const { data } = await axios.post("/user/login", userData, config);
 
       return data.user;
     } catch (error) {
-      console.log(error);
-
       return thunkApi.rejectWithValue(error.response.data.message);
     }
   }
 );
-// export const loginUser = createAsyncThunk(
-//   "user/login",
+
+// export const register = createAsyncThunk(
+//   "user/register",
 //   async (userData, thunkApi) => {
 //     try {
-//       const { data } = await axios.post("/user/login", userData, config);
+//       const { data } = await axios.post("/user/register", userData, config);
 
-//       return data.user;
+//       return data.message;
 //     } catch (error) {
 //       return thunkApi.rejectWithValue(error.response.data.message);
 //     }
@@ -111,6 +124,7 @@ export const logoutUser = createAsyncThunk(
   async (_, thunkApi) => {
     try {
       const { data } = await axios.post("/user/logout", config);
+
       return data.message;
     } catch (error) {
       return thunkApi.rejectWithValue(error.response.data.message);

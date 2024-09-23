@@ -18,7 +18,7 @@ const Dashboard = () => {
       <AdminBar />
       <Box
         sx={{
-          height: "calc(100Vh - 100px)",
+          // height: "calc(100Vh - 100px)",
           p: 2,
           // display: "flex",
           alignItems: "center",

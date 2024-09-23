@@ -7,11 +7,11 @@ import {
 } from "@mui/material";
 
 const column = [
-  { id: 1, label: "No", minWidth: 30 },
-  { id: 2, label: "Order", minWidth: 100 },
-  { id: 3, label: "Pelanggan", minWidth: 150 },
-  { id: 5, label: "Tanggal", minWidth: 150 },
-  { id: 6, label: "Status Pembayaran", minWidth: 150 },
+  { id: 1, label: "No", minWidth: 20 },
+  { id: 2, label: "Order", minWidth: 50 },
+  { id: 3, label: "Pelanggan", minWidth: 80 },
+  { id: 5, label: "Tanggal", minWidth: 80 },
+  { id: 6, label: "Status Pembayaran", minWidth: 80 },
 ];
 
 const Transactions = ({ orders }) => {

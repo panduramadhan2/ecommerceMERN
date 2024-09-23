@@ -31,6 +31,8 @@ const LoginPage = () => {
     if (isAuth) {
       navigate("/");
       localStorage.setItem("login", JSON.stringify("login"));
+
+      window.location.reload();
     }
     if (error) {
       iziToast.error({
@@ -39,6 +41,7 @@ const LoginPage = () => {
         position: "topRight",
         timeout: 3000,
       });
+      localStorage.removeItem("login");
       dispatch(authReset());
     }
   }, [isAuth, error]);
