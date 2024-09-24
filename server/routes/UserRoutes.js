@@ -155,7 +155,7 @@ router.post(
   }
 );
 
-// Menampilkan seluruh user
+// Menampilkan seluruh user//
 router.get("/get", authenticate(["admin"]), async (req, res) => {
   try {
     const data = await User.find();
