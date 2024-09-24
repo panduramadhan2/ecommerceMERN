@@ -45,7 +45,9 @@ const columns = [
   },
 ];
 
-const UsersTable = () => {
+const UsersTable = ({ users }) => {
+  console.log(users);
+  
   return (
     <Paper>
       <TableContainer>
