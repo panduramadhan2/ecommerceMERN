@@ -17,6 +17,8 @@ const UsersPage = () => {
 
   const filteredUsers = users?.filter(filtered);
 
+  
+
   return (
     <Box sx={{ height: "100vh" }}>
       <AdminBar />

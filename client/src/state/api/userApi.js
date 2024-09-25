@@ -10,21 +10,21 @@ export const userApi = createApi({
     getUsers: builder.query({
       query: () => "/get",
     }),
-    // deleteUser: builder.mutation({
-    //   query: (id) => ({
-    //     url: `/delete/${id}`,
-    //     method: "DELETE",
-    //   }),
-    //   async onQueryStarted(queryArg, { dispatch, queryFulfilled }) {
-    //     await queryFulfilled,
-    //       await dispatch(
-    //         userApi.endpoints.getUsers.initiate(undefined, {
-    //           forceRefetch: true,
-    //         })
-    //       );
-    //   },
-    // }),
+    deleteUser: builder.mutation({
+      query: (id) => ({
+        url: `/delete/${id}`,
+        method: "DELETE",
+      }),
+      async onQueryStarted(queryArg, { dispatch, queryFulfilled }) {
+        await queryFulfilled,
+          await dispatch(
+            userApi.endpoints.getUsers.initiate(undefined, {
+              forceRefetch: true,
+            })
+          );
+      },
+    }),
   }),
 });
 
-export const { useGetUsersQuery } = userApi;
+export const { useGetUsersQuery, useDeleteUserMutation } = userApi;
