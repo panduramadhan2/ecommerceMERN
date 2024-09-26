@@ -25,6 +25,8 @@ const Dashboard = () => {
           justifyContent: "start",
           flexDirection: "column",
           gap: 2,
+          position: "relative",
+          top: 70,
         }}
       >
         <Data orders={orders} products={products} users={users} />

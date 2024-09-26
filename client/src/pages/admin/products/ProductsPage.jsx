@@ -15,7 +15,7 @@ const ProductsPage = () => {
   return (
     <Fragment>
       <AdminBar />
-      <Box sx={{ minHeight: "calc(100vh - 80px)" }}>
+      <Box sx={{ position: "relative", top: 70 }}>
         {/* search function */}
         <Box
           sx={{
