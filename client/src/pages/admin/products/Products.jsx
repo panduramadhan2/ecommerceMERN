@@ -14,15 +14,47 @@ import { blue, orange, red, yellow } from "@mui/material/colors";
 import ChatIcon from "@mui/icons-material/Chat";
 import EditIcon from "@mui/icons-material/Edit";
 import RemoveIcon from "@mui/icons-material/Remove";
+import { useDeleteProductMutation } from "../../../state/api/productApi";
+import { useEffect } from "react";
+import iziToast from "izitoast";
+import CircularProgress from "@mui/material/CircularProgress";
 
-const Products = () => {
+const Products = ({ product }) => {
+  const defaultImg = "http://dummyimage.com/650x650.png/cc0000/ffffff";
+
+  const [deleteProduct, { data, isSuccess, error, isLoading, reset }] =
+    useDeleteProductMutation();
+
+  const deleteHandler = (id) => deleteProduct(id);
+
+  useEffect(() => {
+    if (isSuccess) {
+      iziToast.success({
+        title: "Success",
+        message: data?.message,
+        position: "topRight",
+        timeout: 3000,
+      });
+      reset();
+    }
+    if (error) {
+      iziToast.error({
+        title: "Success",
+        message: error?.data.message,
+        position: "topRight",
+        timeout: 3000,
+      });
+      reset();
+    }
+  }, [isSuccess, error, data]);
   return (
     <Card sx={{ width: 250 }}>
       <CardMedia
         component="img"
         height={224}
-        image="http://dummyimage.com/650x650.png/ff4444/ffffff"
-        // Cannot GET /images/5c55cba8-a016-43c7-b3ec-f5f75f7c37b0-1701780388411-1703488315388.jpg
+        image={
+          product.image && product.image[0] ? product.image[0].link : defaultImg
+        }
       />
       <CardContent>
         <Box
@@ -34,7 +66,7 @@ const Products = () => {
           }}
         >
           <Typography fontWeight="bold" align="center" fontSize={18}>
-            Kemeja
+            {product.name.substring(0, 20) + " ..."}
           </Typography>
           <Typography
             fontWeight="bold"
@@ -42,10 +74,10 @@ const Products = () => {
             fontSize={14}
             fontStyle="italic"
           >
-            100.000
+            Rp {parseFloat(product.price).toLocaleString("id-ID")}
           </Typography>
           <Stack spacing={2}>
-            <Rating value={5} readOnly />
+            <Rating value={product.rating} readOnly />
           </Stack>
         </Box>
       </CardContent>
@@ -68,8 +100,12 @@ const Products = () => {
           <IconButton>
             <EditIcon sx={{ color: yellow[500] }} />
           </IconButton>
-          <IconButton>
-            <RemoveIcon sx={{ color: red[500] }} />
+          <IconButton onClick={() => deleteHandler(product._id)}>
+            {isLoading ? (
+              <CircularProgress />
+            ) : (
+              <RemoveIcon sx={{ color: red[500] }} />
+            )}
           </IconButton>
         </Box>
       </CardActions>

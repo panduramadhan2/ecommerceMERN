@@ -20,6 +20,21 @@ export const productApi = createApi({
         body,
       }),
     }),
+    deleteProduct: builder.mutation({
+      query: (id) => ({
+        url: `/delete/${id}`,
+        method: "DELETE",
+      }),
+      async onQueryStarted(queryArg, { dispatch, queryFulfilled }) {
+        await queryFulfilled;
+
+        await dispatch(
+          productApi.endpoints.getProducts.initiate(undefined, {
+            forceRefetch: true,
+          })
+        );
+      },
+    }),
   }),
 });
 
@@ -27,4 +42,5 @@ export const {
   useGetProductsQuery,
   useGetProductQuery,
   useGiveReviewMutation,
+  useDeleteProductMutation,
 } = productApi;
