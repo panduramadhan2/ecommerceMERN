@@ -13,9 +13,17 @@ const Product = ({ open, close, productDetail }) => {
 
   const [imageIndex, setIndex] = useState(0);
 
+  // const left = () => {
+  //   setIndex((imageIndex - 1 + product?.image.length) % data?.image.length);
+  // };
+  // const right = () => {
+  //   setIndex((imageIndex + 1) % product?.image.length);
+  // };
+
   const left = () => {
-    setIndex((imageIndex - 1 + product?.image.length) % data?.image.length);
+    setIndex((imageIndex - 1 + product?.image.length) % product?.image.length);
   };
+
   const right = () => {
     setIndex((imageIndex + 1) % product?.image.length);
   };

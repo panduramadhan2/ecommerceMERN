@@ -7,10 +7,13 @@ import FolderDeleteIcon from "@mui/icons-material/FolderDelete";
 import Products from "./Products";
 import { useGetProductsQuery } from "../../../state/api/productApi";
 import { Fragment } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ProductsPage = () => {
+  const navigate = useNavigate();
   const { data: products } = useGetProductsQuery();
-  // console.log(products);
+
+  const toPage = () => navigate("/admin-produk/tambah");
 
   return (
     <Fragment>
@@ -28,7 +31,7 @@ const ProductsPage = () => {
           <Input placeholder="Cari Produk" sx={{ p: 1 }} />
           <Box sx={{ display: "flex", gap: 1 }}>
             <Tooltip title="Tambah">
-              <IconButton>
+              <IconButton onClick={toPage}>
                 <AddIcon sx={{ color: blue[500] }} />
               </IconButton>
             </Tooltip>

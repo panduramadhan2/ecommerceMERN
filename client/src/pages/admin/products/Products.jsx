@@ -42,7 +42,9 @@ const Products = ({ product }) => {
 
   const deleteHandler = (id) => deleteProduct(id);
 
-  const detailHandler = (name) => setName(name);
+  const detailHandler = (name) => {
+    setName(name), setOpen(true);
+  };
 
   useEffect(() => {
     if (prodSuccess) {
