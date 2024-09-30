@@ -1,4 +1,13 @@
-import { Box, Fade, IconButton, Modal, Typography } from "@mui/material";
+import {
+  Box,
+  Fade,
+  IconButton,
+  Modal,
+  TableBody,
+  TableCell,
+  TableRow,
+  Typography,
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
@@ -42,13 +51,16 @@ const Product = ({ open, close, productDetail }) => {
             left: "50%",
             transform: "translate(-50%, -50%)",
             width: { xs: 300, md: 700 },
+            height: { xs: 500, md: 500 },
+            overflow: "auto",
             bgcolor: "white",
             border: "2px solid #000",
             boxShadow: 24,
             p: 4,
           }}
         >
-          <Box sx={{ position: "absolute", top: -16, right: -16 }}>
+          {/* <Box sx={{ position: "absolute", top: -16, right: -16 }}> */}
+          <Box sx={{ position: "absolute", top: 0, right: -0 }}>
             <IconButton onClick={closeHandler} sx={{ bgcolor: "red" }}>
               <CloseIcon sx={{ color: "white" }} />
             </IconButton>
@@ -108,7 +120,7 @@ const Product = ({ open, close, productDetail }) => {
                 justifyContent: "center",
               }}
             >
-              <Typography variant="h6" component="div">
+              {/* <Typography variant="h6" component="div">
                 {product?.name}
               </Typography>
               <Typography variant="h6" component="div">
@@ -128,7 +140,46 @@ const Product = ({ open, close, productDetail }) => {
               </Typography>
               <Typography variant="h6" component="div">
                 {product?.weight} gram
-              </Typography>
+              </Typography> */}
+              <TableBody>
+                <TableRow>
+                  <TableCell>Nama Produk</TableCell>
+                  <TableCell>:</TableCell>
+                  <TableCell>{product?.name}</TableCell>
+                </TableRow>
+
+                <TableRow>
+                  <TableCell>Harga Produk</TableCell>
+                  <TableCell>:</TableCell>
+                  <TableCell>
+                    Rp {parseFloat(product?.price).toLocaleString("id-ID")}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Harga Beli</TableCell>
+                  <TableCell>:</TableCell>
+                  <TableCell>
+                    Rp {parseFloat(product?.capital).toLocaleString("id-ID")}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Harga Jual</TableCell>
+                  <TableCell>:</TableCell>
+                  <TableCell>
+                    Rp {parseFloat(product?.profit).toLocaleString("id-ID")}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Stok</TableCell>
+                  <TableCell>:</TableCell>
+                  <TableCell>{product?.stock}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Berat</TableCell>
+                  <TableCell>:</TableCell>
+                  <TableCell>{product?.weight} gram</TableCell>
+                </TableRow>
+              </TableBody>
             </Box>
           </Box>
           <Box

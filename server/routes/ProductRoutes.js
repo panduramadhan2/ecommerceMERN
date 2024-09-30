@@ -1,35 +1,63 @@
 import express from "express";
 import Product from "../models/Product.js";
 import { authenticate } from "../middleware/authenticate.js";
+import multer from "multer";
+import path from "path";
+
+const productStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./upload/products");
+  },
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      path.parse(file.originalname).name +
+        "-" +
+        Date.now() +
+        path.extname(file.originalname)
+    );
+  },
+});
+
+const uploadImg = multer({ storage: productStorage }).array("image", 10);
 
 const router = express.Router();
 
-router.post("/add-product", authenticate(["admin"]), async (req, res) => {
-  try {
-    const { name, desc, category, price, capital, stock, weight } = req.body;
-    const profit = price - capital;
-    const product = await Product.create({
-      name: name,
-      desc: desc,
-      category: category,
-      price: price,
-      capital: capital,
-      profit: profit,
-      stock: stock,
-      weight: weight,
-    });
+router.post(
+  "/add-product",
+  authenticate(["admin"]),
+  uploadImg,
+  async (req, res) => {
+    try {
+      const images = req.files.map(
+        (img) => process.env.SERVER + "/products/" + img.filename
+      );
+      const { name, desc, category, price, capital, stock, weight } = req.body;
+      const profit = price - capital;
+      const product = await Product.create({
+        name: name,
+        desc: desc,
+        category: category,
+        price: price,
+        capital: capital,
+        profit: profit,
+        stock: stock,
+        weight: weight,
+        image: images.map((link) => ({ link })),
+      });
 
-    if (!product)
-      return res.status(500).json({ error: "Produk gagal ditambahkan" });
-    res.status(200).json({ message: "Produk berhasil ditambahkan", product });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
+      if (!product)
+        return res.status(500).json({ error: "Produk gagal ditambahkan" });
+      res.status(200).json({ message: "Produk berhasil ditambahkan", product });
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
   }
-});
+);
 
 router.get("/show-products", async (req, res, next) => {
   try {
-    const products = await Product.find();
+    const products = await Product.find().sort({ createdAt: -1 });
     res.status(200).json(products);
   } catch (error) {
     return res.status(500).json({ error: error.message });

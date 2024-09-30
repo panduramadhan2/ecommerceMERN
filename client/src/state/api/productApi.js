@@ -35,6 +35,22 @@ export const productApi = createApi({
         );
       },
     }),
+    addProduct: builder.mutation({
+      query: (body) => ({
+        url: `/add-product`,
+        method: "POST",
+        body,
+      }),
+      async onQueryStarted(queryArg, { dispatch, queryFulfilled }) {
+        await queryFulfilled;
+
+        await dispatch(
+          productApi.endpoints.getProducts.initiate(undefined, {
+            forceRefetch: true,
+          })
+        );
+      },
+    }),
   }),
 });
 
@@ -43,4 +59,5 @@ export const {
   useGetProductQuery,
   useGiveReviewMutation,
   useDeleteProductMutation,
+  useAddProductMutation,
 } = productApi;
