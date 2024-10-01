@@ -16,6 +16,7 @@ const createMarkUp = (html) => {
 
 const DetailProduct = () => {
   const params = useParams();
+  const defaultImg = "http://dummyimage.com/650x650.png/cc0000/ffffff";
 
   const { data, errror, isLoading } = useGetProductQuery(params?.name);
 
@@ -53,7 +54,11 @@ const DetailProduct = () => {
               }}
             >
               <img
-                src={data?.image[imageIndex].link}
+                src={
+                  data?.image[imageIndex]
+                    ? data?.image[imageIndex].link
+                    : defaultImg
+                }
                 alt={data?.name}
                 style={{
                   height: "450px",

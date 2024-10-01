@@ -19,6 +19,7 @@ import { useDispatch } from "react-redux";
 import { loadUser } from "./state/api/authApi";
 import Confirm from "./pages/product/Confirm";
 import AddProduct from "./pages/admin/products/AddProduct";
+import EditProduct from "./pages/admin/products/EditProduct";
 
 function App() {
   const dispatch = useDispatch();
@@ -43,6 +44,7 @@ function App() {
         <Route path="/admin-pelanggan" element={<UsersPage />} />
         <Route path="/admin-produk" element={<ProductsPage />} />
         <Route path="/admin-produk/tambah" element={<AddProduct />} />
+        <Route path="/admin-produk/edit/:name" element={<EditProduct />} />
         <Route path="/admin-pesanan" element={<OrdersPage />} />
         <Route path="/admin-laporan" element={<ReportPage />} />
       </Routes>

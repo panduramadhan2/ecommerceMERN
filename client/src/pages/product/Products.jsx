@@ -21,6 +21,7 @@ import { useGetProductsQuery } from "../../state/api/productApi";
 
 const Products = () => {
   const navigate = useNavigate();
+  const defaultImg = "http://dummyimage.com/650x650.png/cc0000/ffffff";
   const { data, eror, isLoading } = useGetProductsQuery();
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -125,7 +126,7 @@ const Products = () => {
               <CardMedia
                 component="img"
                 alt={product.name}
-                image={product.image[0] ? product.image[0].link : null}
+                image={product.image[0] ? product.image[0].link : defaultImg}
                 sx={{ minHeight: 200, objectFit: "cover" }}
               />
             </CardActionArea>

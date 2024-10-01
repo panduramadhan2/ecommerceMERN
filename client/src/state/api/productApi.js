@@ -35,9 +35,56 @@ export const productApi = createApi({
         );
       },
     }),
+    deleteProducts: builder.mutation({
+      query: (id) => ({
+        url: `/delete-all`,
+        method: "DELETE",
+      }),
+      async onQueryStarted(queryArg, { dispatch, queryFulfilled }) {
+        await queryFulfilled;
+
+        await dispatch(
+          productApi.endpoints.getProducts.initiate(undefined, {
+            forceRefetch: true,
+          })
+        );
+      },
+    }),
     addProduct: builder.mutation({
       query: (body) => ({
         url: `/add-product`,
+        method: "POST",
+        body,
+      }),
+      async onQueryStarted(queryArg, { dispatch, queryFulfilled }) {
+        await queryFulfilled;
+
+        await dispatch(
+          productApi.endpoints.getProducts.initiate(undefined, {
+            forceRefetch: true,
+          })
+        );
+      },
+    }),
+    editProduct: builder.mutation({
+      query: ({ body, id }) => ({
+        url: `/update/${id}`,
+        method: "PUT",
+        body,
+      }),
+      async onQueryStarted(queryArg, { dispatch, queryFulfilled }) {
+        await queryFulfilled;
+
+        await dispatch(
+          productApi.endpoints.getProducts.initiate(undefined, {
+            forceRefetch: true,
+          })
+        );
+      },
+    }),
+    uploadProduct: builder.mutation({
+      query: (body) => ({
+        url: `/upload-products`,
         method: "POST",
         body,
       }),
@@ -59,5 +106,8 @@ export const {
   useGetProductQuery,
   useGiveReviewMutation,
   useDeleteProductMutation,
+  useDeleteProductsMutation,
   useAddProductMutation,
+  useUploadProductMutation,
+  useEditProductMutation,
 } = productApi;

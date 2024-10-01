@@ -22,9 +22,12 @@ import { useEffect, useState } from "react";
 import iziToast from "izitoast";
 import CircularProgress from "@mui/material/CircularProgress";
 import Product from "./Product";
+import { useNavigate } from "react-router-dom";
 
 const Products = ({ product }) => {
   const defaultImg = "http://dummyimage.com/650x650.png/cc0000/ffffff";
+
+  const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
@@ -46,11 +49,15 @@ const Products = ({ product }) => {
     setName(name), setOpen(true);
   };
 
-  useEffect(() => {
-    if (prodSuccess) {
-      setOpen(true);
-    }
-  }, [prodSuccess]);
+  const editPage = (name) => {
+    navigate(`/admin-produk/edit/${name}`);
+  };
+
+  // useEffect(() => {
+  //   if (prodSuccess) {
+  //     setOpen(true);
+  //   }
+  // }, [prodSuccess]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -126,7 +133,7 @@ const Products = ({ product }) => {
           <IconButton>
             <ChatIcon sx={{ color: orange[500] }} />
           </IconButton>
-          <IconButton>
+          <IconButton onClick={() => editPage(product.name)}>
             <EditIcon sx={{ color: yellow[500] }} />
           </IconButton>
           <IconButton onClick={() => deleteHandler(product._id)}>

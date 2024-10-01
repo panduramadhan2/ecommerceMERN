@@ -55,6 +55,37 @@ router.post(
   }
 );
 
+router.post("/upload-products", authenticate(["admin"]), async (req, res) => {
+  try {
+    const { data } = req.body;
+    const validData = data.filter(
+      (item) => item[0] !== null && item[0] !== undefined
+    );
+
+    await Promise.all(
+      validData.map(async (item) => {
+        await Product.create({
+          name: item[0],
+          category: item[1],
+          capital: item[2],
+          price: item[3],
+          profit: item[4],
+          stock: item[5],
+          weight: item[6],
+          desc: item[7],
+        });
+      })
+    );
+    res
+      .status(200)
+      .json({ message: `${validData.length} produk berhasil disimpan` });
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({ message: error.message });
+  }
+});
+
 router.get("/show-products", async (req, res, next) => {
   try {
     const products = await Product.find().sort({ createdAt: -1 });
@@ -91,36 +122,82 @@ router.delete("/delete/:id", authenticate(["admin"]), async (req, res) => {
   }
 });
 
-router.put("/update/:id", authenticate(["admin"]), async (req, res) => {
+router.delete("/delete-all", authenticate(["admin"]), async (req, res) => {
   try {
-    let product = await Product.findById(req.params.id);
-
-    const { name, desc, category, price, capital, stock, weight } = req.body;
-
-    const profit = price - capital;
-
-    const data = {
-      name: name,
-      desc: desc,
-      category: category,
-      price: price,
-      capital: capital,
-      profit: profit,
-      stock: stock,
-      weight: weight,
-    };
-    product = await Product.findByIdAndUpdate(req.params.id, data, {
-      new: true,
-      runValidators: true,
-    });
-    res.status(200).json({ message: "Produk berhasil diperbarui" });
+    await Product.deleteMany();
+    res.status(200).json({ message: "Seluruh produk berhasil dihapus" });
   } catch (error) {
     if (error.name === "CastError") {
-      return res.status(404).json({ error: "Produk tidak ditemukan" });
+      return res.status(404).json({ message: "Produk tidak ditemukan" });
     }
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ message: error.message });
   }
 });
+
+router.put(
+  "/update/:id",
+  authenticate(["admin"]),
+  uploadImg,
+  async (req, res) => {
+    try {
+      let images = [];
+
+      if (req.files) {
+        images = req.files.map(
+          (img) => process.env.SERVER + "/products/" + img.filename
+        );
+      }
+
+      let product = await Product.findById(req.params.id);
+
+      const { name, desc, category, price, capital, stock, weight, image } =
+        req.body;
+
+      const profit = price - capital;
+
+      let data;
+
+      if (images.length > 0) {
+        data = {
+          name: name,
+          desc: desc,
+          category: category,
+          price: price,
+          capital: capital,
+          profit: profit,
+          stock: stock,
+          weight: weight,
+          image: images.map((link) => ({ link })),
+        };
+      } else {
+        data = {
+          name: name,
+          desc: desc,
+          category: category,
+          price: price,
+          capital: capital,
+          profit: profit,
+          stock: stock,
+          weight: weight,
+          image: image.map((link) => ({ link })),
+        };
+      }
+
+      product = await Product.findByIdAndUpdate(req.params.id, data, {
+        new: true,
+        runValidators: true,
+      });
+
+      res.status(200).json({ message: "Produk berhasil diperbarui" });
+    } catch (error) {
+      console.log(error);
+      if (error.name === "CastError") {
+        return res.status(404).json({ message: "Produk tidak ditemukan" });
+      }
+      return res.status(500).json({ message: error.message });
+    }
+  }
+);
 
 // router.post("/give-review/:id", authenticate(["user"]), async (req, res) => {
 //   try {

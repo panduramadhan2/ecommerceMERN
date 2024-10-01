@@ -17,8 +17,10 @@ const createMarkUp = (html) => {
   return { __html: html };
 };
 
-const Product = ({ open, close, productDetail }) => {
+const Product = ({ open, close, productDetail, reset }) => {
   const product = productDetail && productDetail;
+
+  const defaultImg = "http://dummyimage.com/650x650.png/cc0000/ffffff";
 
   const [imageIndex, setIndex] = useState(0);
 
@@ -84,7 +86,11 @@ const Product = ({ open, close, productDetail }) => {
                 }}
               >
                 <img
-                  src={product?.image[imageIndex].link}
+                  src={
+                    product?.image[imageIndex]
+                      ? product?.image[imageIndex].link
+                      : defaultImg
+                  }
                   alt={product?.name}
                   style={{
                     height: "100%",
